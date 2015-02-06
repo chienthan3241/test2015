@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5" >
+
+       <EditText
+            android:id="@+id/titleSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="50dp"
+            android:ems="10" >
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/titlelbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@id/titleSearch"
+            android:layout_alignTop="@id/titleSearch"
+            android:text="@string/title"
+            android:textSize="20sp" />
+        
+        <EditText
+            android:id="@+id/artistSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_below="@id/titleSearch"
+            android:ems="10" >
+        </EditText>
+        
+        <TextView
+            android:id="@+id/artistlbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"            
+            android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@id/artistSearch"
+            android:layout_alignTop="@id/artistSearch"
+            android:text="@string/artist"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/searchbtn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/artistSearch"
+            android:layout_below="@id/artistSearch"
+            android:layout_marginTop="21dp"
+            android:text="Search" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dip"
+        android:layout_height="fill_parent"
+        android:layout_weight="0.5" >
+        
+        <Spinner
+            android:id="@+id/limit"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="50dp"
+            android:entries="@array/limit_search" />
+
+        <TextView
+            android:id="@+id/limitlbl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/limit"
+            android:layout_alignTop="@id/limit"
+            android:layout_marginRight="5dp"
+            android:text="@string/limit"
+            android:textSize="20sp" /> 
+            
+        <RadioGroup
+            android:id="@+id/formatcheck"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:layout_alignTop="@id/limitlbl"
+            android:layout_toLeftOf="@id/limitlbl" >
+
+            <RadioButton
+                android:id="@+id/single"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="Single" />
+            
+            <RadioButton
+                android:id="@+id/album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Album" />
+
+        </RadioGroup>
+        
+        
+
+    </RelativeLayout>
+
+</LinearLayout>
