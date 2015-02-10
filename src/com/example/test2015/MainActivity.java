@@ -2,7 +2,11 @@ package com.example.test2015;
 
 import org.json.JSONObject;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import android.app.ActionBar;
@@ -15,6 +19,7 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -84,7 +89,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		 * init variables
 		 */		
 		//init Volley Request Queue
-	    queue = Volley.newRequestQueue(this);    
+	    queue = Volley.newRequestQueue(this, new MyHurlStack());    
 	    
 	    
 		// Create the adapter that will return a fragment for each of the three
@@ -113,8 +118,29 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         for (String tab_name : tabs) {
             actionBar.addTab(actionBar.newTab().setText(tab_name)
                     .setTabListener(this));
-        } 
+        }         
         
+        String url = "http://gdata.youtube.com/feeds/api/videos?q=Blank+space+taylor+swift&orderby=relevance&start-index=1&max-results=1&v=2&alt=json";
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, null,
+                new Response.Listener<JSONObject>() {
+ 
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.v("sucess", response.toString());
+                       
+                    }
+                }, new Response.ErrorListener() {
+ 
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.v( "Error: ", error.getMessage());
+                        // hide the progress dialog
+                        
+                    }
+                });
+
+        queue.add(jsonObjReq);
 	}
 	
 	
