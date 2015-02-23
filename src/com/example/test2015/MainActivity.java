@@ -1,12 +1,11 @@
 package com.example.test2015;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONObject;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import android.app.ActionBar;
@@ -19,7 +18,6 @@ import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends FragmentActivity implements ActionBar.TabListener {
@@ -29,6 +27,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	private static RequestQueue queue = null;
 	public static RequestQueue getQueue(){
 		return queue;
+	}
+	//------------------
+	private static RequestQueue httpsqueue = null;
+	public static RequestQueue gethttpsQueue(){
+		return httpsqueue;
 	}
 	//------------------
 	private static JSONObject searchjson = null;
@@ -63,6 +66,22 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		search_artist_txt = obj;
 	}
 	//------------------
+	private static List<single_track> SearchListItems = new ArrayList<single_track>();
+	public static List<single_track> getSearchListItem() {
+		return SearchListItems;
+	}
+	public static void addSearchItem(single_track item){
+		SearchListItems.add(item);
+	}
+	public static void clearSearchList (){
+		SearchListItems.clear();
+	}
+	//------------------
+	public static searchTrackList SearchListAdapter;
+	public static searchTrackList getSearchListAdapter() {
+		return SearchListAdapter;
+	}
+	//------------------
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -76,7 +95,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	 */
 	private ViewPager mViewPager;
 	private TabsPagerAdapter mAdapter;
-	private String[] tabs = { "Tab 1", "Tab 2", "Tab 3" };
+	private String[] tabs = { "Chart", "Search", "Tab 3" };
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -88,9 +107,13 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		/**
 		 * init variables
 		 */		
-		//init Volley Request Queue
+		//init Volley http Request Queue
 	    queue = Volley.newRequestQueue(this, new MyHurlStack());    
+	    //init Volley https Request Queue
+	    httpsqueue = Volley.newRequestQueue(this, new MyHttpsUrlStack());
 	    
+	    //init Search_list
+	    SearchListAdapter=new searchTrackList(this, SearchListItems); 
 	    
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -120,27 +143,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
                     .setTabListener(this));
         }         
         
-        String url = "http://gdata.youtube.com/feeds/api/videos?q=Blank+space+taylor+swift&orderby=relevance&start-index=1&max-results=1&v=2&alt=json";
-        JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
-                url, null,
-                new Response.Listener<JSONObject>() {
- 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.v("sucess", response.toString());
-                       
-                    }
-                }, new Response.ErrorListener() {
- 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.v( "Error: ", error.getMessage());
-                        // hide the progress dialog
-                        
-                    }
-                });
-
-        queue.add(jsonObjReq);
 	}
 	
 	

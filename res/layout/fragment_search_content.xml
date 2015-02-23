@@ -6,6 +6,7 @@
         android:id="@+id/listsearch"
         android:layout_width="fill_parent"
         android:dividerHeight="1dp"
+        android:divider="#b5b5b5"
         android:layout_height="wrap_content" >
     </ListView>
 	

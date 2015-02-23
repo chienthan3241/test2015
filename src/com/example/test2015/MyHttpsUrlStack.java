@@ -7,13 +7,14 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.util.Properties;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import com.android.volley.toolbox.HurlStack;
 
-public class MyHurlStack extends HurlStack{
-
+public class MyHttpsUrlStack extends HurlStack{
 	@Override
-	protected HttpURLConnection createConnection(URL url) throws IOException{		
-	
+	protected HttpURLConnection createConnection(URL url) throws IOException{
+		
 		Authenticator authenticator = new Authenticator() {
 
 	        public PasswordAuthentication getPasswordAuthentication() {
@@ -28,8 +29,9 @@ public class MyHurlStack extends HurlStack{
 		systemProperties.setProperty("http.proxyPort","8080");
 		systemProperties.setProperty("https.proxyHost","10.149.18.180");
 		systemProperties.setProperty("https.proxyPort","8080");
-		HttpURLConnection returnThis = (HttpURLConnection) url.openConnection();
+		HttpsURLConnection returnThis = (HttpsURLConnection) url.openConnection();
 		return returnThis;
 		
 	}
+
 }

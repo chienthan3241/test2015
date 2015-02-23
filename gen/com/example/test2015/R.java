@@ -67,24 +67,28 @@ public final class R {
         public static final int youtubeicon=0x7f020024;
     }
     public static final class id {
-        public static final int action_settings=0x7f090011;
+        public static final int action_settings=0x7f090015;
         public static final int album=0x7f09000b;
         public static final int artistSearch=0x7f090004;
         public static final int artistlbl=0x7f090005;
-        public static final int expandicon=0x7f09000e;
+        public static final int expandicon=0x7f090012;
         public static final int formatcheck=0x7f090009;
+        public static final int header_txt=0x7f09000d;
         public static final int limit=0x7f090007;
         public static final int limitlbl=0x7f090008;
         public static final int listsearch=0x7f09000c;
         public static final int pager=0x7f090000;
+        public static final int search_artist=0x7f090010;
+        public static final int search_title=0x7f09000f;
+        public static final int search_type=0x7f09000e;
         public static final int searchbtn=0x7f090006;
         public static final int section_label=0x7f090001;
         public static final int single=0x7f09000a;
         public static final int titleSearch=0x7f090002;
         public static final int titlelbl=0x7f090003;
-        public static final int track_info=0x7f090010;
-        public static final int track_thumbnail=0x7f09000d;
-        public static final int track_title=0x7f09000f;
+        public static final int track_info=0x7f090014;
+        public static final int track_thumbnail=0x7f090011;
+        public static final int track_title=0x7f090013;
     }
     public static final class layout {
         public static final int activity_main=0x7f030000;
@@ -93,7 +97,8 @@ public final class R {
         public static final int fragment_playlist=0x7f030003;
         public static final int fragment_search=0x7f030004;
         public static final int fragment_search_content=0x7f030005;
-        public static final int track_row=0x7f030006;
+        public static final int simple_header=0x7f030006;
+        public static final int track_row=0x7f030007;
     }
     public static final class menu {
         public static final int main=0x7f080000;
