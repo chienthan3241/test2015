@@ -8,8 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/title"
-        android:textStyle="bold"
-        android:text="Search Result with:" />
+        android:textStyle="bold" />
 	<TextView
         android:id="@+id/search_type"
         android:layout_width="fill_parent"

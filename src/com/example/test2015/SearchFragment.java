@@ -85,7 +85,7 @@ public class SearchFragment extends Fragment {
 										SingleSearchContentFragment rep = new SingleSearchContentFragment();
 										ft.addToBackStack("xyz");
 										ft.hide(SearchFragment.this);
-										ft.add(android.R.id.content, rep);
+										ft.add(android.R.id.content, rep, "SINGLE_DETAIL_FRAGMENT");
 										ft.commit();							        	
 							        }
 							    }, 
@@ -101,7 +101,7 @@ public class SearchFragment extends Fragment {
 					MainActivity.gethttpsQueue().add(getRequest);
 					}
 				}else{
-					MainActivity.setSearchformat("ALBUM");
+					MainActivity.setSearchAlbumformat("ALBUM");
 					if(titletext.equals("") && artisttext.equals("")){						
 						//show alert
 						final AlertDialog arlertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -134,15 +134,15 @@ public class SearchFragment extends Fragment {
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setSearchjson(response);								          
-							        	MainActivity.setSearch_title_txt(titletext);
-							        	MainActivity.setSearch_artist_txt(artisttext);
+							        	MainActivity.setsearchalbumjson(response);								          
+							        	MainActivity.setSearch_album_title_txt(titletext);
+							        	MainActivity.setSearch_album_artist_txt(artisttext);
 							        	FragmentManager fm = getFragmentManager();
 										FragmentTransaction ft = fm.beginTransaction();
-										SingleSearchContentFragment rep = new SingleSearchContentFragment();
+										AlbumSearchContentFragment rep = new AlbumSearchContentFragment();
 										ft.addToBackStack("xyz");
 										ft.hide(SearchFragment.this);
-										ft.add(android.R.id.content, rep);
+										ft.add(android.R.id.content, rep, "ALBUM_DETAIL_FRAGMENT");
 										ft.commit();							        	
 							        }
 							    }, 

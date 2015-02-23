@@ -77,9 +77,57 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		SearchListItems.clear();
 	}
 	//------------------
+	private static List<single_track> SearchAlbumListItems = new ArrayList<single_track>();
+	public static List<single_track> getSearchAlbumListItems() {
+		return SearchAlbumListItems;
+	}
+	public static void addSearchAlbumListItems(single_track item){
+		SearchAlbumListItems.add(item);
+	}
+	public static void clearSearchAlbumListItems (){
+		SearchAlbumListItems.clear();
+	}
+	//------------------
+	private static JSONObject searchalbumjson = null;
+	public static JSONObject getsearchalbumjson(){
+		return searchalbumjson;
+	}
+	public static void setsearchalbumjson(JSONObject obj){
+		searchalbumjson = obj;
+	}
+	//------------------
+	private static String search_album_format = "";
+	public static String getSearchAlbumformat(){
+		return search_album_format;
+	}
+	public static void setSearchAlbumformat(String obj){
+		search_album_format = obj;
+	}
+	//------------------
+	private static String search_album_title_txt = "";
+	public static String getSearch_album_title_txt(){
+		return search_album_title_txt;
+	}
+	public static void setSearch_album_title_txt(String obj){
+		search_album_title_txt = obj;
+	}
+	//------------------
+	private static String search_album_artist_txt = "";
+	public static String getSearch_album_artist_txt(){
+		return search_album_artist_txt;
+	}
+	public static void setSearch_album_artist_txt(String obj){
+		search_album_artist_txt = obj;
+	}
+	//------------------
 	public static searchTrackList SearchListAdapter;
 	public static searchTrackList getSearchListAdapter() {
 		return SearchListAdapter;
+	}
+	//------------------
+	public static searchTrackList SearchAlbumListAdapter;
+	public static searchTrackList getSearchAlbumListAdapter() {
+		return SearchAlbumListAdapter;
 	}
 	//------------------
 	/**
@@ -93,7 +141,10 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	/**
 	 * The {@link ViewPager} that will host the section contents.
 	 */
-	private ViewPager mViewPager;
+	private static ViewPager mViewPager;
+	public static ViewPager getmViewPager() {
+		return mViewPager;
+	}
 	private TabsPagerAdapter mAdapter;
 	private String[] tabs = { "Chart", "Search", "Tab 3" };
 	@Override
@@ -114,6 +165,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	    
 	    //init Search_list
 	    SearchListAdapter=new searchTrackList(this, SearchListItems); 
+	    SearchAlbumListAdapter = new searchTrackList(this, SearchAlbumListItems);
 	    
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
