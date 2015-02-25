@@ -86,7 +86,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 	public static void clearSearchAlbumListItems (){
 		SearchAlbumListItems.clear();
-	}
+	}	
 	//------------------
 	private static JSONObject searchalbumjson = null;
 	public static JSONObject getsearchalbumjson(){
@@ -130,6 +130,54 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		return SearchAlbumListAdapter;
 	}
 	//------------------
+	private static List<single_track> YoutubeListItems = new ArrayList<single_track>();
+	public static List<single_track> getYoutubeListItems() {
+		return YoutubeListItems;
+	}
+	public static void addYoutubeListItems(single_track item){
+		YoutubeListItems.add(item);
+	}
+	public static void clearYoutubeListItems (){
+		YoutubeListItems.clear();
+	}
+	//------------------
+	private static JSONObject searchyoutubejson = null;
+	public static JSONObject getsearchyoutubejson(){
+		return searchyoutubejson;
+	}
+	public static void setsearchyoutubejson(JSONObject obj){
+		searchyoutubejson = obj;
+	}
+	//------------------
+	private static String search_youtube_format = "";
+	public static String getsearch_youtube_format(){
+		return search_youtube_format;
+	}
+	public static void setsearch_youtube_format(String obj){
+		search_youtube_format = obj;
+	}
+	//------------------
+	private static String search_youtube_title_txt = "";
+	public static String getsearch_youtube_title_txt(){
+		return search_youtube_title_txt;
+	}
+	public static void setsearch_youtube_title_txt(String obj){
+		search_youtube_title_txt = obj;
+	}
+	//------------------
+	private static String search_youtube_artist_txt = "";
+	public static String getsearch_youtube_artist_txt(){
+		return search_youtube_artist_txt;
+	}
+	public static void setsearch_youtube_artist_txt(String obj){
+		search_youtube_artist_txt = obj;
+	}
+	//------------------
+	public static searchTrackList SearchYoutubeListAdapter;
+	public static searchTrackList getSearchYoutubeListAdapter() {
+		return SearchYoutubeListAdapter;
+	}
+	//------------------
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -166,6 +214,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	    //init Search_list
 	    SearchListAdapter=new searchTrackList(this, SearchListItems); 
 	    SearchAlbumListAdapter = new searchTrackList(this, SearchAlbumListItems);
+	    SearchYoutubeListAdapter = new searchTrackList(this, YoutubeListItems);
 	    
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.

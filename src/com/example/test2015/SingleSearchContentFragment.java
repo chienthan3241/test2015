@@ -4,15 +4,25 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 
 public class SingleSearchContentFragment extends Fragment {	
 	
@@ -114,6 +124,50 @@ public class SingleSearchContentFragment extends Fragment {
 	        arlertDialog.show();		        
 		}		
 		
+		/**
+		 * listview items onclick listener
+		 */
+		listview.setOnItemClickListener(new OnItemClickListener(){
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					final int position, long id) {
+				
+					String rq = "https://gdata.youtube.com/feeds/api/videos?q="+
+								MainActivity.getSearchListItem().get(position-1).getTitle().trim().replace(" ", "+")+"+"+
+								MainActivity.getSearchListItem().get(position-1).getArtist().trim().replace(" ", "+")+
+								"&orderby=relevance&start-index=1&max-results=20&v=2&alt=json";					
+					JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
+						    new Response.Listener<JSONObject>() 
+						    {
+						        @Override
+						        public void onResponse(JSONObject response) {   
+						            MainActivity.setsearchyoutubejson(response);
+						            MainActivity.setsearch_youtube_format("YOUTUBE_LIST");
+						            MainActivity.setsearch_youtube_title_txt(MainActivity.getSearchListItem().get(position-1).getTitle());
+									MainActivity.setsearch_youtube_artist_txt(MainActivity.getSearchListItem().get(position-1).getArtist());          
+						            
+						            FragmentManager fm = getFragmentManager();
+									FragmentTransaction ft = fm.beginTransaction();
+									YoutubeListContentFragment rep = new YoutubeListContentFragment();
+									ft.addToBackStack("abcd");
+									ft.hide(SingleSearchContentFragment.this);
+									ft.add(android.R.id.content, rep, "YOUTUBE_DETAIL_FRAGMENT");
+									ft.commit();
+						        }
+						    }, 
+						    new Response.ErrorListener() 
+						    {
+						         @Override
+						         public void onErrorResponse(VolleyError error) {            
+						            Log.v("Error.Response", "error");
+						       }						
+						    }
+						);
+					MainActivity.gethttpsQueue().add(getRequest);	
+			}
+			
+		});
 		
 		return rootView;
 	}
