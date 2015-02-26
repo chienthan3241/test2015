@@ -1,15 +1,19 @@
 package com.example.test2015;
 
 import java.util.List;
+
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class searchTrackList extends BaseAdapter {
@@ -36,6 +40,24 @@ public class searchTrackList extends BaseAdapter {
 		NetworkImageView thumbNail = (NetworkImageView) view.findViewById(R.id.track_thumbnail);
 		TextView title = (TextView) view.findViewById(R.id.track_title);
 		TextView info = (TextView) view.findViewById(R.id.track_info);
+		ImageButton dwnbtn = (ImageButton) view.findViewById(R.id.imagedownload);
+		ImageButton addbtn = (ImageButton) view.findViewById(R.id.imageadd);
+		if(MainActivity.getCurrentaction()!="YOUTUBE_LIST"){
+			dwnbtn.setVisibility(View.GONE);
+			addbtn.setVisibility(View.GONE);
+		}
+		dwnbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.v("abc","download");			
+			}
+		});
+		addbtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.v("abc","add");			
+			}
+		});
 		//row items
 		single_track track = trackItems.get(position);
 		if(track.getImgFromLocal()){

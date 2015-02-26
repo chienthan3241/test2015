@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content" 
-    android:padding="8dp">
+    android:padding="8dp"
+    android:descendantFocusability="blocksDescendants" >
     <com.android.volley.toolbox.NetworkImageView
         android:id="@+id/track_thumbnail"
         android:layout_width="80dp"
@@ -32,5 +33,36 @@
         android:layout_below="@id/track_title"
         android:layout_marginTop="5dp"
         android:layout_toRightOf="@+id/track_thumbnail"
-        android:textSize="@dimen/info" />		
+        android:textSize="@dimen/info" />
+	 
+	
+	
+	<ImageButton
+	    android:id="@+id/imagedownload"
+	    android:layout_width="30dp"
+	    android:layout_height="30dp"
+	    android:layout_below="@id/track_info"
+	    android:layout_toLeftOf="@+id/expandicon"
+	    android:layout_marginRight="30dp"
+	    android:background="@android:color/transparent"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/downloadicon2"
+	    android:focusable="false"
+		android:focusableInTouchMode="false"
+	     />
+	
+	<ImageButton
+	    android:id="@+id/imageadd"
+	    android:layout_width="30dp"
+	    android:layout_height="30dp"
+	    android:layout_alignTop="@+id/imagedownload"
+	    android:layout_toLeftOf="@+id/imagedownload"
+	    android:layout_marginRight="30dp"
+	    android:background="@android:color/transparent"
+	    android:scaleType="fitCenter"
+	    android:src="@drawable/addicon"
+	    android:focusable="false"
+		android:focusableInTouchMode="false" 
+	    />
+		
 </RelativeLayout>

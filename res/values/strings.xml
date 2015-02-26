@@ -19,5 +19,7 @@
         <item>30</item>
         <item>50</item>
     </string-array>
+    <string name="download">Download to local</string>
+    <string name="add">Add to Playlist</string>
 
 </resources>

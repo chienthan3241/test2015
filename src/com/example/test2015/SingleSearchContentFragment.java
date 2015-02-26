@@ -154,6 +154,7 @@ public class SingleSearchContentFragment extends Fragment {
 									ft.hide(SingleSearchContentFragment.this);
 									ft.add(android.R.id.content, rep, "YOUTUBE_DETAIL_FRAGMENT");
 									ft.commit();
+									MainActivity.setCurrentaction("YOUTUBE_LIST");
 						        }
 						    }, 
 						    new Response.ErrorListener() 

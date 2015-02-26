@@ -109,6 +109,7 @@ public class AlbumSearchContentFragment extends Fragment {
 									ft.hide(AlbumSearchContentFragment.this);
 									ft.add(android.R.id.content, rep, "SINGLE_DETAIL_FRAGMENT");
 									ft.commit();
+									MainActivity.setCurrentaction("TRACK_LIST");
 						        }
 						    }, 
 						    new Response.ErrorListener() 

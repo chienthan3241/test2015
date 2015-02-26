@@ -178,6 +178,84 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		return SearchYoutubeListAdapter;
 	}
 	//------------------
+	public static String currentaction ="";
+	public static void setCurrentaction(String obj){
+		currentaction = obj;
+	}
+	public static String getCurrentaction(){
+		return currentaction;
+	}
+	//------------------	
+	private static List<single_track> ChartsListItems = new ArrayList<single_track>();
+	public static List<single_track> getChartsListItems() {
+		return ChartsListItems;
+	}
+	public static void addChartsListItems(single_track item){
+		ChartsListItems.add(item);
+	}
+	public static void clearChartsListItems (){
+		ChartsListItems.clear();
+	}
+	//------------------
+	private static JSONObject Chartsjson = null;
+	public static JSONObject getChartsjson(){
+		return Chartsjson;
+	}
+	public static void setChartsjson(JSONObject obj){
+		Chartsjson = obj;
+	}
+	//------------------
+	private static String Chartsxml = null;
+	public static String getChartsxml(){
+		return Chartsxml;
+	}
+	public static void setChartsxml(String obj){
+		Chartsxml = obj;
+	}
+	//------------------
+	private static String Chartsname ="";
+	private static String Chartstype ="";
+	private static String Chartslimit="";
+	private static String Chartscountry ="";
+	private static String Chartstimeunit = "";
+	private static String Chartstimeinterval ="";
+	public static void setChartsname(String obj) {
+		Chartsname = obj;
+	}
+	public static String getChartsname(){
+		return Chartsname;
+	}
+	public static void setChartstype(String obj){
+		Chartstype = obj;
+	}
+	public static String getChartstype(){
+		return Chartstype;		
+	}
+	public static void setChartslimit(String obj){
+		Chartslimit = obj;
+	}
+	public static String getChartslimit(){
+		return Chartslimit;		
+	}
+	public static void setChartscountry(String obj){
+		Chartscountry = obj;
+	}
+	public static String getChartscountry(){
+		return Chartscountry;		
+	}
+	public static void setChartstimeunit(String obj){
+		Chartstimeunit = obj;
+	}
+	public static String getChartstimeunit(){
+		return Chartstimeunit;		
+	}
+	public static void setChartstimeinterval(String obj){
+		Chartstimeinterval = obj;
+	}
+	public static String getChartstimeinterval(){
+		return Chartstimeinterval;		
+	}
+	//------------------
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
 	 * fragments for each of the sections. We use a {@link FragmentPagerAdapter}
@@ -194,7 +272,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		return mViewPager;
 	}
 	private TabsPagerAdapter mAdapter;
-	private String[] tabs = { "Chart", "Search", "Tab 3" };
+	private String[] tabs = { "Charts", "Search", "Tab 3" };
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

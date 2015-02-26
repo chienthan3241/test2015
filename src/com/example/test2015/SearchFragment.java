@@ -86,7 +86,8 @@ public class SearchFragment extends Fragment {
 										ft.addToBackStack("xyz");
 										ft.hide(SearchFragment.this);
 										ft.add(android.R.id.content, rep, "SINGLE_DETAIL_FRAGMENT");
-										ft.commit();							        	
+										ft.commit();
+										MainActivity.setCurrentaction("TRACK_LIST");
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -143,7 +144,8 @@ public class SearchFragment extends Fragment {
 										ft.addToBackStack("xyz");
 										ft.hide(SearchFragment.this);
 										ft.add(android.R.id.content, rep, "ALBUM_DETAIL_FRAGMENT");
-										ft.commit();							        	
+										ft.commit();			
+										MainActivity.setCurrentaction("ALBUM_LIST");
 							        }
 							    }, 
 							    new Response.ErrorListener() 
