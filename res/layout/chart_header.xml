@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:padding="8dp"> 
+    <ImageView
+        android:id="@+id/chart_thumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp" />   
+	<TextView
+        android:id="@+id/chart_name_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/chart_thumbnail"
+        android:layout_toRightOf="@+id/chart_thumbnail" />
+
+	<Spinner
+	    android:id="@+id/chart_type"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentRight="true"
+	    android:layout_alignTop="@+id/chart_name_txt"
+	    android:layout_marginRight="20dp"
+	    android:background="#A9BCF5" />
+
+	<TextView
+        android:id="@+id/chart_type_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/chart_type"
+        android:layout_alignTop="@+id/chart_name_txt"
+        android:layout_marginRight="20dp" />
+	
+	<TextView 
+	    android:id="@+id/chart_country_txt"
+	    android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/chart_thumbnail"
+        android:layout_below="@+id/chart_name_txt"
+	    />
+	<Spinner
+	    android:id="@+id/chart_country"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_toRightOf="@+id/chart_country_txt"
+	    android:layout_alignTop="@+id/chart_country_txt"
+	    android:layout_marginLeft="20dp"	    
+	    android:background="#A9BCF5" />
+	
+	<Spinner
+	    android:id="@+id/chart_limit"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/chart_type"
+	    android:layout_alignTop="@+id/chart_country_txt"
+	    android:background="#A9BCF5" />
+	
+	<TextView
+        android:id="@+id/chart_limit_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chart_type_txt"
+        android:layout_alignTop="@+id/chart_country_txt" />
+	
+	<TextView 
+	    android:id="@+id/chart_timeunit_txt"
+	    android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/chart_thumbnail"
+        android:layout_below="@+id/chart_country_txt"
+	    />
+	<Spinner
+	    android:id="@+id/chart_timeunit"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/chart_country"
+	    android:layout_alignTop="@+id/chart_timeunit_txt"
+	    android:background="#A9BCF5" />
+	
+	<Spinner
+	    android:id="@+id/chart_timeinterval"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignLeft="@+id/chart_limit"
+	    android:layout_alignTop="@+id/chart_timeunit_txt"
+	    android:background="#A9BCF5" />
+	
+	<TextView
+        android:id="@+id/chart_timeinterval_txt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/chart_limit_txt"
+        android:layout_alignTop="@+id/chart_timeunit_txt"/>
+	
+	<Button
+	    android:id="@+id/chart_submit"
+	    style="?android:attr/buttonStyleSmall"
+	    android:layout_marginTop="5dp"
+	    android:layout_marginBottom="5dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="40dp"
+	    android:layout_alignLeft="@+id/chart_timeinterval_txt"
+	    android:layout_alignParentBottom="true"
+	    android:layout_below="@+id/chart_timeinterval_txt"
+	    android:text="Refresh Chart" />
+	
+	<View 
+	   android:layout_width="fill_parent"
+	   android:layout_height="2dp"    
+	   android:layout_below="@id/chart_submit"   
+	   android:background="#000000"/>
+	
+</RelativeLayout>

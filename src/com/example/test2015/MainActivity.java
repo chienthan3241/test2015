@@ -197,6 +197,11 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		ChartsListItems.clear();
 	}
 	//------------------
+	public static searchTrackList ChartsListAdapter;
+	public static searchTrackList getChartsListAdapter() {
+		return ChartsListAdapter;
+	}
+	//------------------
 	private static JSONObject Chartsjson = null;
 	public static JSONObject getChartsjson(){
 		return Chartsjson;
@@ -293,6 +298,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	    SearchListAdapter=new searchTrackList(this, SearchListItems); 
 	    SearchAlbumListAdapter = new searchTrackList(this, SearchAlbumListItems);
 	    SearchYoutubeListAdapter = new searchTrackList(this, YoutubeListItems);
+	    ChartsListAdapter = new searchTrackList(this, ChartsListItems);
 	    
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
