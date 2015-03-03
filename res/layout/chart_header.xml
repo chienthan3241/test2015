@@ -47,7 +47,8 @@
 	    android:layout_toRightOf="@+id/chart_country_txt"
 	    android:layout_alignTop="@+id/chart_country_txt"
 	    android:layout_marginLeft="20dp"	    
-	    android:background="#A9BCF5" />
+	    android:background="#A9BCF5" 
+	    android:popupBackground="#A9BCF5"/>
 	
 	<Spinner
 	    android:id="@+id/chart_limit"

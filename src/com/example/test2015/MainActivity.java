@@ -3,6 +3,7 @@ package com.example.test2015;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
@@ -208,6 +209,14 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 	public static void setChartsjson(JSONObject obj){
 		Chartsjson = obj;
+	}
+	//------------------
+	private static JSONArray Chartsjsonarr = null;
+	public static JSONArray getChartsjsonarr(){
+		return Chartsjsonarr;
+	}
+	public static void setChartsjsonarr(JSONArray obj){
+		Chartsjsonarr = obj;
 	}
 	//------------------
 	private static String Chartsxml = null;
