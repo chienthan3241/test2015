@@ -312,6 +312,48 @@ public class ChartFragment extends Fragment{
 			}
 		});
         
+        //Lastfm Charts
+        lastfmbtn.setOnClickListener(new View.OnClickListener() {			
+			@Override
+			public void onClick(View v) {
+				MainActivity.setChartsname("LASTFM");
+				MainActivity.setChartstype("Top Songs");
+				MainActivity.setChartslimit("30");
+				MainActivity.setChartscountry("United States");
+				MainActivity.setChartstimeunit("daily");
+				MainActivity.setChartstimeinterval("lastest");
+				String rq = "";
+				rq = "http://ws.audioscrobbler.com/2.0/?method=geo.getTopTracks&country=UNITED%20STATES&api_key=d6ef461c9610dc5d695efce1bbab90c1&format=json&limit=30";
+				JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
+					    new Response.Listener<JSONObject>() 
+					    {
+					        @Override
+					        public void onResponse(JSONObject response) {   
+					        	MainActivity.setChartsjson(response);         
+					        	FragmentManager fm = getFragmentManager();
+								FragmentTransaction ft = fm.beginTransaction();
+								ChartsContentFragment rep = new ChartsContentFragment();
+								ft.addToBackStack("aabc");
+								ft.hide(ChartFragment.this);
+								ft.add(android.R.id.content, rep, "CHART_SINGLE_DETAIL_FRAGMENT");
+								ft.commit();
+								MainActivity.setCurrentaction("CHART_LIST");
+					        }
+					    }, 
+					    new Response.ErrorListener() 
+					    {
+					         @Override
+					         public void onErrorResponse(VolleyError error) {            
+					            Log.v("Error.Response", "error");
+					       }						
+					    }
+					);				
+				
+				MainActivity.getQueue().add(getRequest);
+				
+			}
+		});
+        
         return rootView;
     }
 }

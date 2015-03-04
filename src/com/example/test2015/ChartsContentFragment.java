@@ -1060,6 +1060,139 @@ public class ChartsContentFragment extends Fragment{
 		
 		break;
 		
+		case "LASTFM":
+			try {
+				items = MainActivity.getChartsjson().getJSONObject("toptracks").getJSONArray("track");
+				for(int i = 0; i<items.length();i++){
+					item = items.getJSONObject(i);
+					track_tmp = new single_track();
+					track_tmp.setTitle(item.getString("name"));
+					track_tmp.setArtist(item.getJSONObject("artist").getString("name"));					
+					if(!item.isNull("image")){
+						track_tmp.setThumbnailUrl(item.getJSONArray("image").getJSONObject(0).getString("#text"));
+					}
+					String dur = "";
+					if(!item.getString("duration").equals("")){
+						dur = String.format("%.2f",(float) (Integer.parseInt(item.getString("duration"))/60.0f));
+					}
+					track_tmp.setInfo(
+							"Rank: "+item.getJSONObject("@attr").getString("rank")+"\t"+
+						    "Listeners: "+ item.getString("listeners")+"\t"+
+						    
+							"duration: " + dur
+							);
+					
+					MainActivity.addChartsListItems(track_tmp);
+				}
+				
+				//config search header
+				chart_thumbnail.setImageResource(R.drawable.lastfm_store);
+				chart_name_txt.setText("Charts provider: Lastfm radio Charts");
+				
+				chart_type_txt.setText("Charts type: ");
+				chart_type_options.add("Top Songs");					
+				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
+				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				
+				chart_country_txt.setText("Country: ");	
+				final Map<String, String> country_ar = new HashMap<>();
+				country_ar.put("United%20States", "United States");
+				country_ar.put("Germany", "Germany");			
+				country_ar.put("United%20Kingdom", "United Kingdom");
+				country_ar.put("France", "France");
+				country_ar.put("Spain", "Spain");
+				country_ar.put("Italy", "Italy");
+				country_ar.put("Netherlands", "Netherlands");
+				country_ar.put("Belgium", "Belgium");
+				country_ar.put("Viet%20nam", "Viet Nam");
+				@SuppressWarnings("rawtypes")
+				Iterator entries = country_ar.entrySet().iterator();
+				while (entries.hasNext()) {
+					@SuppressWarnings("unchecked")
+					Entry<String, String> thisEntry  = (Entry<String, String>) entries.next();
+					chart_country_options.add(thisEntry.getValue()); 					
+				}
+				Collections.sort(chart_country_options);
+				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
+				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				
+				chart_limit_txt.setText("Limit: ");
+				chart_limit_options.add("10");
+				chart_limit_options.add("20");
+				chart_limit_options.add("30");
+				chart_limit_options.add("50");
+				chart_limit_options.add("100");
+				chart_limit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_limit_options));
+				chart_limit.setSelection(chart_limit_options.indexOf(MainActivity.getChartslimit()));
+				
+				chart_timeunit_txt.setText("Time Unit: ");
+				chart_timeunit_options.add("Daily");
+				chart_timeunit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_timeunit_options));
+				chart_timeunit.setSelection(chart_timeunit_options.indexOf("Daily"));
+				
+				chart_timeinterval_txt.setText("Time interval: ");				
+				chart_timeinterval_options.add("lastest");
+				chart_timeinterval.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_timeinterval_options));
+				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
+				
+				listview.addHeaderView(header,null,false);
+				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				
+				chart_submit.setOnClickListener(new View.OnClickListener() {					
+					@Override
+					public void onClick(View v) {
+						// re-send billboard request
+						MainActivity.setChartsname("LASTFM");
+						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
+						MainActivity.setChartslimit(chart_limit.getSelectedItem().toString());
+						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
+						MainActivity.setChartstimeunit("Daily");
+						MainActivity.setChartstimeinterval("lastest");
+						String map_key_cc = "";
+						for (Entry<String, String> entry : country_ar.entrySet()){
+							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
+								map_key_cc = entry.getKey();
+								break;
+							}							
+						}
+						String rq = "";
+						rq = "http://ws.audioscrobbler.com/2.0/?method=geo.getTopTracks&country="+map_key_cc+"&api_key=d6ef461c9610dc5d695efce1bbab90c1&format=json&limit="+MainActivity.getChartslimit();
+						JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
+							    new Response.Listener<JSONObject>() 
+							    {
+							        @Override
+							        public void onResponse(JSONObject response) {   
+							        	MainActivity.setChartsjson(response);         
+							        	//reload current Fragment
+										Fragment frg=null;
+										frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
+										FragmentTransaction ft = getFragmentManager().beginTransaction();
+										ft.detach(frg);
+										ft.attach(frg);
+										ft.commit();
+										MainActivity.setCurrentaction("CHART_LIST");
+							        }
+							    }, 
+							    new Response.ErrorListener() 
+							    {
+							         @Override
+							         public void onErrorResponse(VolleyError error) {            
+							            Log.v("Error.Response", "error");
+							       }						
+							    }
+							);	
+						
+						MainActivity.getQueue().add(getRequest);						
+					}
+				});
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+		break;
 		default:
 			break;
 		}	

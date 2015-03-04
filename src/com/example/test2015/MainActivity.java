@@ -286,7 +286,6 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		return mViewPager;
 	}
 	private TabsPagerAdapter mAdapter;
-	private String[] tabs = { "Charts", "Search", "Tab 3" };
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -332,10 +331,9 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
         });
 		
 		// Adding Tabs
-        for (String tab_name : tabs) {
-            actionBar.addTab(actionBar.newTab().setText(tab_name)
-                    .setTabListener(this));
-        }         
+		actionBar.addTab(actionBar.newTab().setText("  Charts").setIcon(R.drawable.charts_tab_icon).setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("  Search").setIcon(R.drawable.search_tab_icon).setTabListener(this));
+		actionBar.addTab(actionBar.newTab().setText("  Play List(building..)").setIcon(R.drawable.playlist_tab_icon).setTabListener(this));      
         
 	}
 	
@@ -374,7 +372,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	
 	@Override
 	public void onTabSelected(ActionBar.Tab tab, FragmentTransaction ft) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stub		
 		mViewPager.setCurrentItem(tab.getPosition());
 	}
 
