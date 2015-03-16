@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+     		 android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_margin="8dp">
+      <LinearLayout  
+          	android:layout_height="wrap_content"  
+			android:layout_width="fill_parent"
+			android:id="@+id/obenlot" 
+			android:weightSum="1.0">
+          <ImageView
+	        android:id="@+id/youtube_logo"
+	        android:layout_width="80dp"
+	        android:layout_height="80dp"
+	        android:layout_alignParentLeft="true"
+	        android:layout_marginRight="8dp" />
+          <View 
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight=".50"
+              />
+          <RelativeLayout 
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight=".50"
+              android:layout_gravity="bottom"
+              android:layout_marginBottom="15dp" >
+              
+              <com.example.test2015.DelayAutoCompleteTextView     
+	            android:id="@+id/youtube_search_str"
+	            android:inputType="textCapSentences"
+	            android:layout_width="fill_parent"
+	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi|actionSearch" 
+	            android:layout_alignParentBottom="true" />
+
+              <ProgressBar
+                  android:id="@+id/loading_indicator"
+                  style="?android:attr/progressBarStyleSmall"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignBottom="@+id/youtube_search_str"
+                  android:layout_alignParentRight="true" 
+                  android:layout_marginBottom="5dp"
+                  android:visibility="gone"/>
+
+          </RelativeLayout>              
+          
+          <Button
+		    android:id="@+id/youtube_searchbtn"
+		    style="?android:attr/buttonStyleSmall"
+		    android:layout_alignParentRight="true"
+		    android:layout_gravity="bottom|right"
+		    android:layout_marginBottom="8dp"
+		    android:layout_width="wrap_content"
+		    android:layout_height="40dp"	 
+		    android:text="Search" />
+      </LinearLayout>         
+       
+   	    <!-- <ProgressBar
+            android:id="@+id/loading_indicator"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="5dp"
+            android:visibility="gone"/>     -->
+       <View 
+		   android:layout_width="fill_parent"
+		   android:layout_height="2dp"    
+		   android:layout_below="@id/obenlot"   
+		   android:background="#000000"/>
+</RelativeLayout>
+<!-- <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:padding="8dp"> 
+    <ImageView
+        android:id="@+id/youtube_logo"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp" />    
+   
+    
+    <Button
+	    android:id="@+id/youtube_searchbtn"
+	    style="?android:attr/buttonStyleSmall"
+	    android:layout_alignParentRight="true"
+	    android:layout_marginTop="20dp"
+	    android:layout_width="wrap_content"
+	    android:layout_height="40dp"	 
+	    android:text="Search" />
+    
+   <AutoCompleteTextView
+      android:id="@+id/youtubeautoComplete"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_toLeftOf="@+id/youtube_searchbtn"
+      android:layout_alignBottom="@+id/youtube_searchbtn"
+      android:ems="10">
+      <requestFocus />
+   </AutoCompleteTextView> 
+      
+    
+    <View 
+	   android:layout_width="fill_parent"
+	   android:layout_height="2dp"    
+	   android:layout_below="@id/youtube_logo"   
+	   android:background="#000000"/>
+</RelativeLayout>
+-->

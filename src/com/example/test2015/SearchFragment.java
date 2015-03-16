@@ -17,8 +17,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.AdapterView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 
 
@@ -26,12 +28,35 @@ public class SearchFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-		
-        View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_search, container, false);
         final RadioButton single 	= (RadioButton)rootView.findViewById(R.id.single);
-        final EditText titletxt 	= (EditText)rootView.findViewById(R.id.titleSearch);
-		final EditText artisttxt 	= (EditText)rootView.findViewById(R.id.artistSearch);        
+        final DelayAutoCompleteTextView titletxt 	= (DelayAutoCompleteTextView)rootView.findViewById(R.id.titleSearch);
+		final DelayAutoCompleteTextView artisttxt 	= (DelayAutoCompleteTextView)rootView.findViewById(R.id.artistSearch);        
 		final Spinner limit 		= (Spinner)rootView.findViewById(R.id.limit);
+		final RadioGroup search_type_radio_btn = (RadioGroup) rootView.findViewById(R.id.formatcheck);
+		
+		titletxt.setThreshold(2);
+		titletxt.setAdapter(MainActivity.SpotAutoCompleteTitleAdapter);
+		titletxt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String item = (String) parent.getItemAtPosition(position);
+				titletxt.setText(item);						
+			}
+		});
+		
+		artisttxt.setThreshold(2);
+		artisttxt.setAdapter(MainActivity.SpotAutoCompleteArtistAdapter);
+		artisttxt.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String item = (String) parent.getItemAtPosition(position);
+				artisttxt.setText(item);				
+			}
+		});
+		
         //button search clicked
         rootView.findViewById(R.id.searchbtn).setOnClickListener(new View.OnClickListener(){
 
@@ -42,9 +67,9 @@ public class SearchFragment extends Fragment {
 				final String titletext = titletxt.getText().toString().trim();
 				final String artisttext = artisttxt.getText().toString().trim();
 				final String limittxt = limit.getSelectedItem().toString();
-				MainActivity.setSearchjson(null);								
+				((MainActivity) getActivity()).searchjson=null;								
 				if(single.isChecked()){
-					MainActivity.setSearchformat("TRACK");
+					((MainActivity) getActivity()).search_format="TRACK";
 					if(titletext.equals("") && artisttext.equals("")){						
 						//show alert
 						final AlertDialog arlertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -77,17 +102,18 @@ public class SearchFragment extends Fragment {
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setSearchjson(response);								          
-							        	MainActivity.setSearch_title_txt(titletext);
-							        	MainActivity.setSearch_artist_txt(artisttext);
+							        	((MainActivity) getActivity()).searchjson=response;								          
+							        	((MainActivity) getActivity()).search_title_txt=titletext;
+							        	((MainActivity) getActivity()).search_artist_txt=artisttext;
 							        	FragmentManager fm = getFragmentManager();
 										FragmentTransaction ft = fm.beginTransaction();
 										SingleSearchContentFragment rep = new SingleSearchContentFragment();
-										ft.addToBackStack("xyz");
-										ft.hide(SearchFragment.this);
+										ft.remove(SearchFragment.this);
 										ft.add(android.R.id.content, rep, "SINGLE_DETAIL_FRAGMENT");
+										ft.addToBackStack(null);
 										ft.commit();
-										MainActivity.setCurrentaction("TRACK_LIST");
+										MainActivity.currentaction="TRACK_LIST";
+										((MainActivity) getActivity()).actionBar.hide();
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -99,10 +125,10 @@ public class SearchFragment extends Fragment {
 							    }
 							);
 						
-					MainActivity.gethttpsQueue().add(getRequest);
+						((MainActivity) getActivity()).httpsqueue.add(getRequest);
 					}
 				}else{
-					MainActivity.setSearchAlbumformat("ALBUM");
+					((MainActivity) getActivity()).search_album_format="ALBUM";
 					if(titletext.equals("") && artisttext.equals("")){						
 						//show alert
 						final AlertDialog arlertDialog = new AlertDialog.Builder(v.getContext()).create();
@@ -135,17 +161,18 @@ public class SearchFragment extends Fragment {
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setsearchalbumjson(response);								          
-							        	MainActivity.setSearch_album_title_txt(titletext);
-							        	MainActivity.setSearch_album_artist_txt(artisttext);
+							        	((MainActivity) getActivity()).searchalbumjson=response;								          
+							        	((MainActivity) getActivity()).search_album_title_txt=titletext;
+							        	((MainActivity) getActivity()).search_album_artist_txt=artisttext;
 							        	FragmentManager fm = getFragmentManager();
 										FragmentTransaction ft = fm.beginTransaction();
 										AlbumSearchContentFragment rep = new AlbumSearchContentFragment();
-										ft.addToBackStack("xyz");
-										ft.hide(SearchFragment.this);
+										ft.remove(SearchFragment.this);
 										ft.add(android.R.id.content, rep, "ALBUM_DETAIL_FRAGMENT");
+										ft.addToBackStack(null);
 										ft.commit();			
-										MainActivity.setCurrentaction("ALBUM_LIST");
+										MainActivity.currentaction="ALBUM_LIST";
+										((MainActivity) getActivity()).actionBar.hide();
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -157,13 +184,26 @@ public class SearchFragment extends Fragment {
 							    }
 							);
 						
-					MainActivity.gethttpsQueue().add(getRequest);
+						((MainActivity) getActivity()).httpsqueue.add(getRequest);
 					}
 				}
 			}
         	
-        });
-         
+        });         
+        
+        search_type_radio_btn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if(((RadioButton) rootView.findViewById(checkedId)).getText().equals("Single")){
+					MainActivity.search_single_radio = true;
+				}else{
+					MainActivity.search_single_radio=false;
+				}
+				
+			}
+		});
+        
         return rootView;
     }
+	
 }

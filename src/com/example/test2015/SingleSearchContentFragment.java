@@ -35,10 +35,10 @@ public class SingleSearchContentFragment extends Fragment {
 		JSONArray items = null;
 		JSONObject album = null;
 		JSONObject item = null;		
-		MainActivity.clearSearchList();
-		if(MainActivity.getSearchformat()=="TRACK"){			
+		((MainActivity) getActivity()).SearchListItems.clear();
+		if(((MainActivity) getActivity()).search_format=="TRACK"){			
 			try {				
-				items = MainActivity.getSearchjson().getJSONObject("tracks").getJSONArray("items");
+				items = ((MainActivity) getActivity()).searchjson.getJSONObject("tracks").getJSONArray("items");
 				for(int i = 0; i<items.length();i++){
 					item = items.getJSONObject(i);
 					single_track track_tmp = new single_track();
@@ -51,7 +51,7 @@ public class SingleSearchContentFragment extends Fragment {
 									"\t track_nr: "+item.getString("track_number") + 
 									"\t popularity: "+item.getString("popularity") + 
 									"\t duration: "+ String.format("%.2f", (float)(Integer.parseInt(item.getString("duration_ms"))/60000.0f))+" min.");
-					MainActivity.addSearchItem(track_tmp);
+					((MainActivity) getActivity()).SearchListItems.add(track_tmp);
 				}
 				//config search header
 				ViewGroup header = (ViewGroup)inflater.inflate(R.layout.simple_header, listview, false);	
@@ -60,21 +60,21 @@ public class SingleSearchContentFragment extends Fragment {
 				TextView headertype = (TextView) header.findViewById(R.id.search_type);	
 				TextView headertxt = (TextView) header.findViewById(R.id.header_txt);
 				headertxt.setText("Serch parameters:");
-				headertitle.setText("title: "+MainActivity.getSearch_title_txt());
-				headerartist.setText("artist: "+MainActivity.getSearch_artist_txt());
-				headertype.setText(MainActivity.getSearchformat());
+				headertitle.setText("title: "+((MainActivity) getActivity()).search_title_txt);
+				headerartist.setText("artist: "+((MainActivity) getActivity()).search_artist_txt);
+				headertype.setText(((MainActivity) getActivity()).search_format);
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getSearchListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).SearchListAdapter.notifyDataSetChanged();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
-		}else if(MainActivity.getSearchformat()=="ALBUM_EXPAND"){
+		}else if(((MainActivity) getActivity()).search_format=="ALBUM_EXPAND"){
 			try {
-				album = MainActivity.getSearchjson();
-				items = MainActivity.getSearchjson().getJSONObject("tracks").getJSONArray("items");
+				album = ((MainActivity) getActivity()).searchjson;
+				items = ((MainActivity) getActivity()).searchjson.getJSONObject("tracks").getJSONArray("items");
 				for(int i = 0; i<items.length();i++){
 					item = items.getJSONObject(i);
 					single_track track_tmp = new single_track();
@@ -87,7 +87,7 @@ public class SingleSearchContentFragment extends Fragment {
 									"\t track_nr: "+item.getString("track_number") + 
 //									"\t popularity: "+item.getString("popularity") + 
 									"\t duration: "+ String.format("%.2f", (float)(Integer.parseInt(item.getString("duration_ms"))/60000.0f))+" min.");
-					MainActivity.addSearchItem(track_tmp);
+					((MainActivity) getActivity()).SearchListItems.add(track_tmp);
 				}
 				//config search header
 				ViewGroup header = (ViewGroup)inflater.inflate(R.layout.simple_header, listview, false);	
@@ -96,22 +96,22 @@ public class SingleSearchContentFragment extends Fragment {
 				TextView headertype = (TextView) header.findViewById(R.id.search_type);	
 				TextView headertxt = (TextView) header.findViewById(R.id.header_txt);
 				headertxt.setText("Album Details:");
-				headertitle.setText("Album's name: "+MainActivity.getSearch_title_txt());
-				headerartist.setText("artist: "+MainActivity.getSearch_artist_txt());
-				headertype.setText(MainActivity.getSearchformat());
+				headertitle.setText("Album's name: "+((MainActivity) getActivity()).search_title_txt);
+				headerartist.setText("artist: "+((MainActivity) getActivity()).search_artist_txt);
+				headertype.setText(((MainActivity) getActivity()).search_format);
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getSearchListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).SearchListAdapter.notifyDataSetChanged();
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 		
-		listview.setAdapter(MainActivity.getSearchListAdapter());
+		listview.setAdapter(((MainActivity) getActivity()).SearchListAdapter);
 		
 		// show warning only
-		if(MainActivity.getSearchListItem().size()==0){
+		if(((MainActivity) getActivity()).SearchListItems.size()==0){
 			final AlertDialog arlertDialog = new AlertDialog.Builder(rootView.getContext()).create();
 			arlertDialog.setTitle("warning!!");
 	        arlertDialog.setMessage("nothing founded??please go back and try again!!!");
@@ -134,27 +134,32 @@ public class SingleSearchContentFragment extends Fragment {
 					final int position, long id) {
 				
 					String rq = "https://gdata.youtube.com/feeds/api/videos?q="+
-								MainActivity.getSearchListItem().get(position-1).getTitle().trim().replace(" ", "+")+"+"+
-								MainActivity.getSearchListItem().get(position-1).getArtist().trim().replace(" ", "+")+
+							((MainActivity) getActivity()).SearchListItems.get(position-1).getTitle().trim().replace(" ", "+")+"+"+
+							((MainActivity) getActivity()).SearchListItems.get(position-1).getArtist().trim().replace(" ", "+")+
 								"&orderby=relevance&start-index=1&max-results=20&v=2&alt=json";					
 					JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
 						    new Response.Listener<JSONObject>() 
 						    {
 						        @Override
 						        public void onResponse(JSONObject response) {   
-						            MainActivity.setsearchyoutubejson(response);
-						            MainActivity.setsearch_youtube_format("YOUTUBE_LIST");
-						            MainActivity.setsearch_youtube_title_txt(MainActivity.getSearchListItem().get(position-1).getTitle());
-									MainActivity.setsearch_youtube_artist_txt(MainActivity.getSearchListItem().get(position-1).getArtist());          
+						        	((MainActivity) getActivity()).searchyoutubejson=response;
+						        	((MainActivity) getActivity()).search_youtube_format="YOUTUBE_LIST";
+						        	((MainActivity) getActivity()).search_youtube_title_txt=((MainActivity) getActivity()).SearchListItems.get(position-1).getTitle();
+						        	((MainActivity) getActivity()).search_youtube_artist_txt=((MainActivity) getActivity()).SearchListItems.get(position-1).getArtist();          
 						            
 						            FragmentManager fm = getFragmentManager();
 									FragmentTransaction ft = fm.beginTransaction();
 									YoutubeListContentFragment rep = new YoutubeListContentFragment();
-									ft.addToBackStack("abcd");
-									ft.hide(SingleSearchContentFragment.this);
+									ft.remove(SingleSearchContentFragment.this);
 									ft.add(android.R.id.content, rep, "YOUTUBE_DETAIL_FRAGMENT");
+									ft.addToBackStack(null);
 									ft.commit();
-									MainActivity.setCurrentaction("YOUTUBE_LIST");
+									
+									if(MainActivity.currentaction.equals("TRACK_LIST")){
+										MainActivity.currentaction="YOUTUBE_LIST_T";
+									}else{
+										MainActivity.currentaction="YOUTUBE_LIST_A";
+									}
 						        }
 						    }, 
 						    new Response.ErrorListener() 
@@ -165,11 +170,10 @@ public class SingleSearchContentFragment extends Fragment {
 						       }						
 						    }
 						);
-					MainActivity.gethttpsQueue().add(getRequest);	
+					((MainActivity) getActivity()).httpsqueue.add(getRequest);	
 			}
 			
-		});
-		
+		});		
 		return rootView;
 	}
 }

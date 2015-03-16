@@ -42,7 +42,7 @@ public class searchTrackList extends BaseAdapter {
 		TextView info = (TextView) view.findViewById(R.id.track_info);
 		ImageButton dwnbtn = (ImageButton) view.findViewById(R.id.imagedownload);
 		ImageButton addbtn = (ImageButton) view.findViewById(R.id.imageadd);
-		if(!MainActivity.getCurrentaction().equals("YOUTUBE_LIST")){
+		if(!(MainActivity.getCurrentaction().equals("YOUTUBE_LIST") || MainActivity.getCurrentaction().equals("YOUTUBE_LIST_A") || MainActivity.getCurrentaction().equals("YOUTUBE_LIST_T"))){
 			dwnbtn.setVisibility(View.GONE);
 			addbtn.setVisibility(View.GONE);
 		}

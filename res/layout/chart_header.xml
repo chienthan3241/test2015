@@ -13,15 +13,15 @@
         android:id="@+id/chart_name_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/chart_thumbnail"
-        android:layout_toRightOf="@+id/chart_thumbnail" />
+        android:layout_alignTop="@id/chart_thumbnail"
+        android:layout_toRightOf="@id/chart_thumbnail" />
 
 	<Spinner
 	    android:id="@+id/chart_type"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:layout_alignParentRight="true"
-	    android:layout_alignTop="@+id/chart_name_txt"
+	    android:layout_alignTop="@id/chart_name_txt"
 	    android:layout_marginRight="20dp"
 	    android:background="#A9BCF5"
 	    android:popupBackground="#A9BCF5" />
@@ -30,23 +30,23 @@
         android:id="@+id/chart_type_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/chart_type"
-        android:layout_alignTop="@+id/chart_name_txt"
+        android:layout_toLeftOf="@id/chart_type"
+        android:layout_alignTop="@id/chart_name_txt"
         android:layout_marginRight="20dp" />
 	
 	<TextView 
 	    android:id="@+id/chart_country_txt"
 	    android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/chart_thumbnail"
-        android:layout_below="@+id/chart_name_txt"
+        android:layout_toRightOf="@id/chart_thumbnail"
+        android:layout_below="@id/chart_name_txt"
 	    />
 	<Spinner
 	    android:id="@+id/chart_country"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_toRightOf="@+id/chart_country_txt"
-	    android:layout_alignTop="@+id/chart_country_txt"
+	    android:layout_toRightOf="@id/chart_country_txt"
+	    android:layout_alignTop="@id/chart_country_txt"
 	    android:layout_marginLeft="20dp"	    
 	    android:background="#A9BCF5" 
 	    android:popupBackground="#A9BCF5"/>
@@ -55,8 +55,8 @@
 	    android:id="@+id/chart_limit"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/chart_type"
-	    android:layout_alignTop="@+id/chart_country_txt"
+	    android:layout_alignLeft="@id/chart_type"
+	    android:layout_alignTop="@id/chart_country_txt"
 	    android:background="#A9BCF5"
 	    android:popupBackground="#A9BCF5" />
 	
@@ -64,8 +64,8 @@
         android:id="@+id/chart_limit_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chart_type_txt"
-        android:layout_alignTop="@+id/chart_country_txt" />
+        android:layout_alignLeft="@id/chart_type_txt"
+        android:layout_alignTop="@id/chart_country_txt" />
 	
 	<TextView 
 	    android:id="@+id/chart_timeunit_txt"
@@ -78,8 +78,8 @@
 	    android:id="@+id/chart_timeunit"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/chart_country"
-	    android:layout_alignTop="@+id/chart_timeunit_txt"
+	    android:layout_alignLeft="@id/chart_country"
+	    android:layout_alignTop="@id/chart_timeunit_txt"
 	    android:background="#A9BCF5"
 	    android:popupBackground="#A9BCF5" />
 	
@@ -87,8 +87,8 @@
 	    android:id="@+id/chart_timeinterval"
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
-	    android:layout_alignLeft="@+id/chart_limit"
-	    android:layout_alignTop="@+id/chart_timeunit_txt"
+	    android:layout_alignLeft="@id/chart_limit"
+	    android:layout_alignTop="@id/chart_timeunit_txt"
 	    android:background="#A9BCF5"
 	    android:popupBackground="#A9BCF5" />
 	
@@ -96,8 +96,8 @@
         android:id="@+id/chart_timeinterval_txt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/chart_limit_txt"
-        android:layout_alignTop="@+id/chart_timeunit_txt"/>
+        android:layout_alignLeft="@id/chart_limit_txt"
+        android:layout_alignTop="@id/chart_timeunit_txt"/>
 	
 	<Button
 	    android:id="@+id/chart_submit"
@@ -108,7 +108,7 @@
 	    android:layout_height="40dp"
 	    android:layout_alignLeft="@+id/chart_timeinterval_txt"
 	    android:layout_alignParentBottom="true"
-	    android:layout_below="@+id/chart_timeinterval_txt"
+	    android:layout_below="@id/chart_timeinterval_txt"
 	    android:text="Refresh Chart" />
 	
 	<View 

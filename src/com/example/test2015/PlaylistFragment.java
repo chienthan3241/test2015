@@ -11,6 +11,7 @@ public class PlaylistFragment extends Fragment{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle saveInstanceState){
 		View rootView = inflater.inflate(R.layout.fragment_playlist, container, false);
+		
 		return rootView;
 	}
 

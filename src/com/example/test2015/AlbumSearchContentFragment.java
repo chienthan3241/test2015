@@ -32,9 +32,9 @@ public class AlbumSearchContentFragment extends Fragment {
 		ListView listview = (ListView) rootView.findViewById(R.id.listsearch);		
 		JSONArray items = null;
 		JSONObject item = null;
-		MainActivity.clearSearchAlbumListItems();
+		((MainActivity) getActivity()).SearchAlbumListItems.clear();
 		try {				
-			items = MainActivity.getsearchalbumjson().getJSONObject("albums").getJSONArray("items");
+			items = ((MainActivity) getActivity()).searchalbumjson.getJSONObject("albums").getJSONArray("items");
 			for(int i = 0; i<items.length();i++){
 				item = items.getJSONObject(i);
 				single_track track_tmp = new single_track();
@@ -43,7 +43,7 @@ public class AlbumSearchContentFragment extends Fragment {
 				track_tmp.setArtist(item.getString("album_type"));
 				track_tmp.setThumbnailUrl(item.getJSONArray("images").getJSONObject(0).getString("url"));
 				track_tmp.setInfo(item.getString("id"));
-				MainActivity.addSearchAlbumListItems(track_tmp);
+				((MainActivity) getActivity()).SearchAlbumListItems.add(track_tmp);
 			}
 			//config search header
 			ViewGroup header = (ViewGroup)inflater.inflate(R.layout.simple_header, listview, false);	
@@ -52,20 +52,20 @@ public class AlbumSearchContentFragment extends Fragment {
 			TextView headertype = (TextView) header.findViewById(R.id.search_type);	
 			TextView headertxt = (TextView) header.findViewById(R.id.header_txt);
 			headertxt.setText("Search parameters:");
-			headertitle.setText("title: "+MainActivity.getSearch_album_title_txt());
-			headerartist.setText("artist: "+MainActivity.getSearch_album_artist_txt());
-			headertype.setText(MainActivity.getSearchAlbumformat());
+			headertitle.setText("title: "+((MainActivity) getActivity()).search_album_title_txt);
+			headerartist.setText("artist: "+((MainActivity) getActivity()).search_album_artist_txt);
+			headertype.setText(((MainActivity) getActivity()).search_album_format);
 			
 			listview.addHeaderView(header,null,false);				
-			MainActivity.getSearchAlbumListAdapter().notifyDataSetChanged();
+			((MainActivity) getActivity()).SearchAlbumListAdapter.notifyDataSetChanged();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		listview.setAdapter(MainActivity.getSearchAlbumListAdapter());
+		listview.setAdapter(((MainActivity) getActivity()).SearchAlbumListAdapter);
 		// show warning only
-		if(MainActivity.getSearchAlbumListItems().size()==0){
+		if(((MainActivity) getActivity()).SearchAlbumListItems.size()==0){
 			final AlertDialog arlertDialog = new AlertDialog.Builder(rootView.getContext()).create();
 			arlertDialog.setTitle("warning!!");
 	        arlertDialog.setMessage("nothing founded??please go back and try again!!!");
@@ -86,17 +86,17 @@ public class AlbumSearchContentFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				
-					String rq = "https://api.spotify.com/v1/albums/"+MainActivity.getSearchAlbumListItems().get(position-1).getId().toString();
+					String rq = "https://api.spotify.com/v1/albums/"+((MainActivity) getActivity()).SearchAlbumListItems.get(position-1).getId().toString();
 					JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
 						    new Response.Listener<JSONObject>() 
 						    {
 						        @Override
 						        public void onResponse(JSONObject response) {   
-						            MainActivity.setSearchjson(response);
-						            MainActivity.setSearchformat("ALBUM_EXPAND");
+						        	((MainActivity) getActivity()).searchjson=response;
+						        	((MainActivity) getActivity()).search_format="ALBUM_EXPAND";
 						            try {
-										MainActivity.setSearch_title_txt(response.getString("name"));
-										MainActivity.setSearch_artist_txt(response.getJSONArray("artists").getJSONObject(0).getString("name"));
+						            	((MainActivity) getActivity()).search_title_txt=response.getString("name");
+						            	((MainActivity) getActivity()).search_artist_txt=response.getJSONArray("artists").getJSONObject(0).getString("name");
 									} catch (JSONException e) {
 										// TODO Auto-generated catch block
 										e.printStackTrace();
@@ -105,11 +105,11 @@ public class AlbumSearchContentFragment extends Fragment {
 						            FragmentManager fm = getFragmentManager();
 									FragmentTransaction ft = fm.beginTransaction();
 									SingleSearchContentFragment rep = new SingleSearchContentFragment();
-									ft.addToBackStack("xyz");
-									ft.hide(AlbumSearchContentFragment.this);
+									ft.remove(AlbumSearchContentFragment.this);
 									ft.add(android.R.id.content, rep, "SINGLE_DETAIL_FRAGMENT");
+									ft.addToBackStack(null);
 									ft.commit();
-									MainActivity.setCurrentaction("TRACK_LIST");
+									MainActivity.currentaction="TRACK_LIST_A";									
 						        }
 						    }, 
 						    new Response.ErrorListener() 
@@ -120,10 +120,11 @@ public class AlbumSearchContentFragment extends Fragment {
 						       }						
 						    }
 						);
-					MainActivity.gethttpsQueue().add(getRequest);	
+					((MainActivity) getActivity()).httpsqueue.add(getRequest);	
 			}
 			
-		});
+		});		
 		return rootView;
 	}
+
 }

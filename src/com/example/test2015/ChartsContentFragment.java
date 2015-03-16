@@ -55,7 +55,7 @@ import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class ChartsContentFragment extends Fragment{
-	@SuppressLint("UseValueOf")
+	@SuppressLint({ "UseValueOf", "DefaultLocale", "SimpleDateFormat" })
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState){
@@ -89,17 +89,16 @@ public class ChartsContentFragment extends Fragment{
 		ArrayList<String> chart_timeinterval_options = new ArrayList<String>();
 		
 		
-		MainActivity.clearChartsListItems();		
-		switch (MainActivity.getChartsname()) {
+		((MainActivity) getActivity()).ChartsListItems.clear();		
+		switch (((MainActivity) getActivity()).Chartsname) {
 		//BILLBOARD CHART
 		case "BILLBOARD":
 			try {
 				XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 				factory.setNamespaceAware(true);
 				XmlPullParser xpp = factory.newPullParser();
-				xpp.setInput(new StringReader(MainActivity.getChartsxml()));
-				int eventType = xpp.getEventType();
-				
+				xpp.setInput(new StringReader(((MainActivity) getActivity()).Chartsxml));
+				int eventType = xpp.getEventType();				
 				while (eventType != XmlPullParser.END_DOCUMENT) {
 					String name = xpp.getName();
 					switch (eventType) {
@@ -115,7 +114,7 @@ public class ChartsContentFragment extends Fragment{
 					case XmlPullParser.END_TAG:
 						if(name.equals("item")){
 							track_tmp.setInfo(info);
-							MainActivity.addChartsListItems(track_tmp);
+							((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 						}else if (name.equals("chart_item_title")){							
 							track_tmp.setTitle(text);							
 						}else if(name.equals("artist")){
@@ -164,24 +163,24 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
 						// re-send billboard request
-						MainActivity.setChartsname("BILLBOARD");
-						MainActivity.setChartstype("hot-100");
-						MainActivity.setChartslimit("100");
-						MainActivity.setChartscountry("World-wide");
-						MainActivity.setChartstimeunit("Weekly");
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="BILLBOARD";
+						((MainActivity) getActivity()).Chartstype = "hot-100";
+						((MainActivity) getActivity()).Chartslimit = "100";
+						((MainActivity) getActivity()).Chartscountry = "World-wide";
+						((MainActivity) getActivity()).Chartstimeunit = "Weekly";
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String rq = "";
 						rq = "http://billboard.com/rss/charts/hot-100";
 						StringRequest getRequest = new StringRequest(Request.Method.GET, rq, 
 							new Response.Listener<String>() {
 								@Override
 								public void onResponse(String response) {
-									MainActivity.setChartsxml(response);
+									((MainActivity) getActivity()).Chartsxml=response;
 									//reload current Fragment
 									Fragment frg=null;
 									frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -189,7 +188,6 @@ public class ChartsContentFragment extends Fragment{
 									ft.detach(frg);
 									ft.attach(frg);
 									ft.commit();
-									MainActivity.setCurrentaction("CHART_LIST");
 								}
 							},
 							new Response.ErrorListener() {
@@ -199,7 +197,7 @@ public class ChartsContentFragment extends Fragment{
 								}
 							}
 						);						
-						MainActivity.getQueue().add(getRequest);						
+						MainActivity.queue.add(getRequest);						
 					}
 				});
 				
@@ -213,8 +211,8 @@ public class ChartsContentFragment extends Fragment{
 		//Itunes charts
 		case "ITUNES":
 			try {
-				items = MainActivity.getChartsjson().getJSONObject("feed").getJSONArray("entry");
-				if(MainActivity.getChartstype().equals("Top Songs")){
+				items = ((MainActivity) getActivity()).Chartsjson.getJSONObject("feed").getJSONArray("entry");
+				if(((MainActivity) getActivity()).Chartstype.equals("Top Songs")){
 					for(int i = 0; i<items.length();i++){
 						item = items.getJSONObject(i);
 						track_tmp = new single_track();
@@ -222,16 +220,13 @@ public class ChartsContentFragment extends Fragment{
 						track_tmp.setTitle(item.getJSONObject("im:name").getString("label"));
 						track_tmp.setArtist(item.getJSONObject("im:artist").getString("label"));
 						track_tmp.setInfo(
-								item.getJSONObject("im:collection").getJSONObject("im:contentType").getJSONObject("im:contentType").getJSONObject("attributes").getString("label")+": "+
-								item.getJSONObject("im:collection").getJSONObject("im:name").getString("label")+" \t "+
 								"itunes preis: "+item.getJSONObject("im:price").getString("label")+" \t "+ 
 								"itunes ID: "+item.getJSONObject("id").getJSONObject("attributes").getString("im:id")+ " \t "+
 								"Genre: "+item.getJSONObject("category").getJSONObject("attributes").getString("label")+ " \t "+
 								"Release: "+item.getJSONObject("im:releaseDate").getJSONObject("attributes").getString("label")+" \n ©"+
-								item.getJSONObject("rights").getString("label")
-								
+								item.getJSONObject("rights").getString("label")								
 								);
-						MainActivity.addChartsListItems(track_tmp);
+						((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 					}
 				}else {
 					for(int i = 0; i<items.length();i++){
@@ -248,7 +243,7 @@ public class ChartsContentFragment extends Fragment{
 								item.getJSONObject("rights").getString("label")
 								
 								);
-						MainActivity.addChartsListItems(track_tmp);
+						((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 					}
 				}
 				//config search header
@@ -259,7 +254,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_type_options.add("Top Songs");
 				chart_type_options.add("Top Albums");
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));				
-				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 				
 				chart_country_txt.setText("Country: ");				
 				final Map<String, String> country_ar = new HashMap<>();
@@ -402,7 +397,7 @@ public class ChartsContentFragment extends Fragment{
 				}
 				Collections.sort(chart_country_options);
 				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 				
 				chart_limit_txt.setText("Limit: ");
 				chart_limit_options.add("10");
@@ -410,7 +405,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_limit_options.add("50");
 				chart_limit_options.add("100");
 				chart_limit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_limit_options));
-				chart_limit.setSelection(chart_limit_options.indexOf(MainActivity.getChartslimit()));
+				chart_limit.setSelection(chart_limit_options.indexOf(((MainActivity) getActivity()).Chartslimit));
 				
 				chart_timeunit_txt.setText("Time Unit: ");
 				chart_timeunit_options.add("Daily");
@@ -423,16 +418,16 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
-						MainActivity.setChartsname("ITUNES");
-						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-						MainActivity.setChartslimit(chart_limit.getSelectedItem().toString());
-						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-						MainActivity.setChartstimeunit("Daily");
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="ITUNES";
+						((MainActivity) getActivity()).Chartstype = chart_type.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartslimit = chart_limit.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartscountry = chart_country.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeunit = "Daily";
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String map_key_cc = "";
 						for (Entry<String, String> entry : country_ar.entrySet()){
 							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
@@ -454,7 +449,7 @@ public class ChartsContentFragment extends Fragment{
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setChartsjson(response);     
+							        	((MainActivity) getActivity()).Chartsjson=response;     
 										//reload current Fragment
 										Fragment frg=null;
 										frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -462,7 +457,7 @@ public class ChartsContentFragment extends Fragment{
 										ft.detach(frg);
 										ft.attach(frg);
 										ft.commit();
-										MainActivity.setCurrentaction("CHART_LIST");
+//										MainActivity.setCurrentaction("CHART_LIST");
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -474,7 +469,7 @@ public class ChartsContentFragment extends Fragment{
 							    }
 							);				
 						
-						MainActivity.gethttpsQueue().add(getRequest);					
+						((MainActivity) getActivity()).httpsqueue.add(getRequest);					
 					}
 				});
 			} catch (JSONException e) {
@@ -485,7 +480,7 @@ public class ChartsContentFragment extends Fragment{
 			break;
 			
 		case "GOOGLEPLAY":
-			Document doc = Jsoup.parse(MainActivity.getChartsxml());
+			Document doc = Jsoup.parse(((MainActivity) getActivity()).Chartsxml);
 			Elements gitems = doc.select("div.details");
 			Elements gcovers = doc.select("div.cover");
 			String grank = "";
@@ -504,7 +499,7 @@ public class ChartsContentFragment extends Fragment{
 						"Rank: " + grank + "\t"+
 						"GooglePlay preis: "+gitems.get(i).select("span.display-price").first().text()						
 						);
-				MainActivity.addChartsListItems(track_tmp);
+				((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 			}
 			//config search header			
 			chart_thumbnail.setImageResource(R.drawable.googleplay_store);
@@ -514,12 +509,12 @@ public class ChartsContentFragment extends Fragment{
 			chart_type_options.add("Top Songs");
 			chart_type_options.add("Top Albums");
 			chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-			chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+			chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 			
 			chart_country_txt.setText("Country: ");
-			chart_country_options.add(MainActivity.getChartscountry());
+			chart_country_options.add(((MainActivity) getActivity()).Chartscountry);
 			chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-			chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+			chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 			
 			chart_limit_txt.setText("Limit: ");
 			chart_limit_options.add("60");
@@ -537,20 +532,19 @@ public class ChartsContentFragment extends Fragment{
 			chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 			
 			listview.addHeaderView(header,null,false);
-			MainActivity.getChartsListAdapter().notifyDataSetChanged();
+			((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 			
 			chart_submit.setOnClickListener(new View.OnClickListener() {					
 				@Override
 				public void onClick(View v) {
 					// re-send billboard request
-					MainActivity.setChartsname("GOOGLEPLAY");
-					MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-					MainActivity.setChartslimit("60");
-					MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-					MainActivity.setChartstimeunit("Daily");
-					MainActivity.setChartstimeinterval("lastest");
+					((MainActivity) getActivity()).Chartsname ="GOOGLEPLAY";
+					((MainActivity) getActivity()).Chartstype = chart_type.getSelectedItem().toString();
+					((MainActivity) getActivity()).Chartslimit = "60";
+					((MainActivity) getActivity()).Chartstimeunit = "Daily";
+					((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 					String rq = "";
-					if(chart_type.equals("Top Songs")){
+					if(chart_type.getSelectedItem().toString().equals("Top Songs")){
 						rq = "https://play.google.com/store/music/collection/topselling_paid_track";
 					}else{
 						rq = "https://play.google.com/store/music/collection/topselling_paid_album";
@@ -560,7 +554,7 @@ public class ChartsContentFragment extends Fragment{
 							new Response.Listener<String>() {
 								@Override
 								public void onResponse(String response) {
-									MainActivity.setChartsxml(response);							
+									((MainActivity) getActivity()).Chartsxml=response;							
 									//reload current Fragment
 									Fragment frg=null;
 									frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -568,7 +562,7 @@ public class ChartsContentFragment extends Fragment{
 									ft.detach(frg);
 									ft.attach(frg);
 									ft.commit();
-									MainActivity.setCurrentaction("CHART_LIST");
+//									MainActivity.setCurrentaction("CHART_LIST");
 								}
 							},
 							new Response.ErrorListener() {
@@ -590,14 +584,14 @@ public class ChartsContentFragment extends Fragment{
 								return params;
 							}
 						};							
-					MainActivity.getQueue().add(postRequest);						
+						MainActivity.queue.add(postRequest);						
 				}
 			});
 		break;
 		
 		case "SPOTIFY":
 			try {
-				items = MainActivity.getChartsjson().getJSONArray("tracks");
+				items = ((MainActivity) getActivity()).Chartsjson.getJSONArray("tracks");
 				for(int i = 0; i<items.length();i++){
 					track_tmp = new single_track();
 					item = items.getJSONObject(i);
@@ -612,7 +606,7 @@ public class ChartsContentFragment extends Fragment{
 						"Chart period: " + item.getString("window_type")+"\t"+
 						"Numbers of streamed: " + item.getString("num_streams")
 					);
-					MainActivity.addChartsListItems(track_tmp);
+					((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 				}
 				
 				//config search header			
@@ -623,7 +617,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_type_options.add("Top Streamed");
 				chart_type_options.add("Top Viral");
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 				
 				chart_country_txt.setText("Country: ");				
 				final Map<String, String> country_ar = new HashMap<>();
@@ -693,7 +687,7 @@ public class ChartsContentFragment extends Fragment{
 				}
 				Collections.sort(chart_country_options);
 				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 				
 				chart_limit_txt.setText("Limit: ");
 				chart_limit_options.add("all");
@@ -704,7 +698,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeunit_options.add("daily");
 				chart_timeunit_options.add("weekly");
 				chart_timeunit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_timeunit_options));
-				chart_timeunit.setSelection(chart_timeunit_options.indexOf(MainActivity.getChartstimeunit()));
+				chart_timeunit.setSelection(chart_timeunit_options.indexOf(((MainActivity) getActivity()).Chartstimeunit));
 				
 				chart_timeinterval_txt.setText("Time interval: ");
 				chart_timeinterval_options.add("latest");
@@ -712,17 +706,17 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("latest"));
 				
 				listview.addHeaderView(header,null,false);	
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
-						MainActivity.setChartsname("SPOTIFY");
-						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-						MainActivity.setChartslimit("all");
-						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-						MainActivity.setChartstimeunit(chart_timeunit.getSelectedItem().toString());
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="SPOTIFY";
+						((MainActivity) getActivity()).Chartstype = chart_type.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartslimit = "all";
+						((MainActivity) getActivity()).Chartscountry = chart_country.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeunit = chart_timeunit.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String map_key_cc = "";
 						for (Entry<String, String> entry : country_ar.entrySet()){
 							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
@@ -748,7 +742,7 @@ public class ChartsContentFragment extends Fragment{
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setChartsjson(response);     
+							        	((MainActivity) getActivity()).Chartsjson=response;     
 										//reload current Fragment
 										Fragment frg=null;
 										frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -756,7 +750,7 @@ public class ChartsContentFragment extends Fragment{
 										ft.detach(frg);
 										ft.attach(frg);
 										ft.commit();
-										MainActivity.setCurrentaction("CHART_LIST");
+//										MainActivity.setCurrentaction("CHART_LIST");
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -768,7 +762,7 @@ public class ChartsContentFragment extends Fragment{
 							    }
 							);				
 						
-						MainActivity.getQueue().add(getRequest);					
+						MainActivity.queue.add(getRequest);					
 					}
 				});
 				
@@ -784,7 +778,7 @@ public class ChartsContentFragment extends Fragment{
 			try {
 				DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 				InputSource is = new InputSource();
-				is.setCharacterStream(new StringReader(MainActivity.getChartsxml()));
+				is.setCharacterStream(new StringReader(((MainActivity) getActivity()).Chartsxml));
 				org.w3c.dom.Document ama_doc =  builder.parse(is);
 				NodeList nodes = ama_doc.getElementsByTagName("item");
 				for(int i = 0; i<nodes.getLength();i++){
@@ -794,8 +788,7 @@ public class ChartsContentFragment extends Fragment{
 					Element line = (Element) des.item(0);
 					Document ama_jsoup_doc = Jsoup.parse(line.getTextContent());					
 					track_tmp.setThumbnailUrl(ama_jsoup_doc.select("img").first().attr("src"));
-					track_tmp.setTitle(ama_jsoup_doc.select("span.riRssTitle").first().select("a").text().trim());
-					Log.v("sds",ama_jsoup_doc.select("span.riRssContributor").first().text().replace("~", "").trim());
+					track_tmp.setTitle(ama_jsoup_doc.select("span.riRssTitle").first().select("a").text().trim());					
 					String ama_artist = ama_jsoup_doc.select("span.riRssContributor").first().text().replace("~", "").trim();
 					if(ama_artist.contains("|")){						
 						track_tmp.setArtist(ama_artist.substring(0, ama_artist.indexOf("|")).trim());
@@ -807,7 +800,7 @@ public class ChartsContentFragment extends Fragment{
 							"Rank: " + element.getElementsByTagName("title").item(0).getTextContent().split(":")[0].replace("#", "").trim()
 					);	
 					
-					MainActivity.addChartsListItems(track_tmp);
+					((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 				}
 				
 				//config search header
@@ -819,7 +812,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_type_options.add("Digital Albums");
 				chart_type_options.add("Digital Tracks");
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 				
 				chart_country_txt.setText("Country: ");	
 				final Map<String, String> country_ar = new HashMap<>();
@@ -840,7 +833,7 @@ public class ChartsContentFragment extends Fragment{
 				}
 				Collections.sort(chart_country_options);
 				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 				
 				chart_limit_txt.setText("Limit: ");
 				chart_limit_options.add("10");
@@ -858,18 +851,18 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 				
 				listview.addHeaderView(header,null,false);				
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
 						// re-send billboard request
-						MainActivity.setChartsname("AMAZON");
-						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-						MainActivity.setChartslimit("10");
-						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-						MainActivity.setChartstimeunit("Daily");
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="AMAZON";
+						((MainActivity) getActivity()).Chartstype = chart_type.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartslimit = "10";
+						((MainActivity) getActivity()).Chartscountry = chart_country.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeunit = "Daily";
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String map_key_cc = "";
 						for (Entry<String, String> entry : country_ar.entrySet()){
 							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
@@ -879,9 +872,9 @@ public class ChartsContentFragment extends Fragment{
 						}
 						String rq = "";
 						rq = "http://amazon"+map_key_cc+"/gp/rss/bestsellers/";
-						if(MainActivity.getChartstype().equals("Physical Albums")){
+						if(((MainActivity) getActivity()).Chartstype.equals("Physical Albums")){
 							rq+="music";
-						}else if(MainActivity.getChartstype().equals("Digital Albums")){
+						}else if(((MainActivity) getActivity()).Chartstype.equals("Digital Albums")){
 							rq+="/dmusic/digital-music-album";
 						}else{
 							rq+="/dmusic/digital-music-track";
@@ -890,7 +883,7 @@ public class ChartsContentFragment extends Fragment{
 							new Response.Listener<String>() {
 								@Override
 								public void onResponse(String response) {
-									MainActivity.setChartsxml(response);
+									((MainActivity) getActivity()).Chartsxml=response;
 									//reload current Fragment
 									Fragment frg=null;
 									frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -898,7 +891,7 @@ public class ChartsContentFragment extends Fragment{
 									ft.detach(frg);
 									ft.attach(frg);
 									ft.commit();
-									MainActivity.setCurrentaction("CHART_LIST");
+//									MainActivity.setCurrentaction("CHART_LIST");
 								}
 							},
 							new Response.ErrorListener() {
@@ -908,7 +901,7 @@ public class ChartsContentFragment extends Fragment{
 								}
 							}
 						);						
-						MainActivity.getQueue().add(getRequest);						
+						MainActivity.queue.add(getRequest);						
 					}
 				});
 				
@@ -921,17 +914,17 @@ public class ChartsContentFragment extends Fragment{
 		break;
 		
 		case "NAPSTER":
-			items = MainActivity.getChartsjsonarr();
+			items = ((MainActivity) getActivity()).Chartsjsonarr;
 			try {
 				for(int i = 0; i<items.length();i++){
 					track_tmp = new single_track();
 					item = items.getJSONObject(i);		
-					if(MainActivity.getChartstype().equals("Top Albums")){
+					if(((MainActivity) getActivity()).Chartstype.equals("Top Albums")){
 						track_tmp.setThumbnailUrl(item.getJSONArray("images").getJSONObject(0).getString("url"));
 					}
 					track_tmp.setArtist(item.getJSONObject("artist").getString("name"));
 					track_tmp.setTitle(item.getString("name"));
-					if(MainActivity.getChartstype().equals("Top Albums")){	
+					if(((MainActivity) getActivity()).Chartstype.equals("Top Albums")){	
 						SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 						track_tmp.setInfo(						
 							"Album type: " + item.getJSONObject("type").getString("name")+"\t"+							
@@ -944,7 +937,7 @@ public class ChartsContentFragment extends Fragment{
 						);
 					}
 					
-					MainActivity.addChartsListItems(track_tmp);
+					((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 				}
 				
 
@@ -956,7 +949,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_type_options.add("Top Songs");
 				chart_type_options.add("Top Albums");					
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 				
 				chart_country_txt.setText("Country: ");	
 				final Map<String, String> country_ar = new HashMap<>();
@@ -977,7 +970,7 @@ public class ChartsContentFragment extends Fragment{
 				}
 				Collections.sort(chart_country_options);
 				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 				
 				chart_limit_txt.setText("Limit: ");
 				chart_limit_options.add("10");
@@ -986,7 +979,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_limit_options.add("50");
 				chart_limit_options.add("100");
 				chart_limit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_limit_options));
-				chart_limit.setSelection(chart_limit_options.indexOf(MainActivity.getChartslimit()));
+				chart_limit.setSelection(chart_limit_options.indexOf(((MainActivity) getActivity()).Chartslimit));
 				
 				chart_timeunit_txt.setText("Time Unit: ");
 				chart_timeunit_options.add("Daily");
@@ -999,18 +992,18 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
 						// re-send billboard request
-						MainActivity.setChartsname("NAPSTER");
-						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-						MainActivity.setChartslimit(chart_limit.getSelectedItem().toString());
-						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-						MainActivity.setChartstimeunit("Daily");
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="NAPSTER";
+						((MainActivity) getActivity()).Chartstype = chart_type.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartslimit = chart_limit.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartscountry = chart_country.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeunit = "Daily";
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String map_key_cc = "";
 						for (Entry<String, String> entry : country_ar.entrySet()){
 							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
@@ -1020,18 +1013,18 @@ public class ChartsContentFragment extends Fragment{
 						}
 						String rq = "";
 						rq = "http://api.rhapsody.com/v1/";
-						if(MainActivity.getChartstype().equals("Top Songs")){
+						if(((MainActivity) getActivity()).Chartstype.equals("Top Songs")){
 							rq+="tracks";						
 						}else{
 							rq+="albums";
 						}
 						rq+="/top?apikey=ZmRkNjg4ODMtMjgyZi00Nzc2LTlmMjQtZDdkM2RmYTExNTEx&limit=";
-						rq+=MainActivity.getChartslimit()+"&catalog="+map_key_cc;
+						rq+=((MainActivity) getActivity()).Chartslimit+"&catalog="+map_key_cc;
 						JsonArrayRequest getRequest = new JsonArrayRequest(rq, 
 								new Response.Listener<JSONArray>() {
 									@Override
 									public void onResponse(JSONArray response) {
-										MainActivity.setChartsjsonarr(response);
+										((MainActivity) getActivity()).Chartsjsonarr=response;
 										//reload current Fragment
 										Fragment frg=null;
 										frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -1039,7 +1032,7 @@ public class ChartsContentFragment extends Fragment{
 										ft.detach(frg);
 										ft.attach(frg);
 										ft.commit();
-										MainActivity.setCurrentaction("CHART_LIST");
+//										MainActivity.setCurrentaction("CHART_LIST");
 									}					
 								},
 								new Response.ErrorListener() 
@@ -1050,7 +1043,7 @@ public class ChartsContentFragment extends Fragment{
 							       }						
 							    });
 						
-						MainActivity.getQueue().add(getRequest);						
+						MainActivity.queue.add(getRequest);						
 					}
 				});
 			} catch (JSONException e) {
@@ -1062,7 +1055,7 @@ public class ChartsContentFragment extends Fragment{
 		
 		case "LASTFM":
 			try {
-				items = MainActivity.getChartsjson().getJSONObject("toptracks").getJSONArray("track");
+				items = ((MainActivity) getActivity()).Chartsjson.getJSONObject("toptracks").getJSONArray("track");
 				for(int i = 0; i<items.length();i++){
 					item = items.getJSONObject(i);
 					track_tmp = new single_track();
@@ -1082,7 +1075,7 @@ public class ChartsContentFragment extends Fragment{
 							"duration: " + dur
 							);
 					
-					MainActivity.addChartsListItems(track_tmp);
+					((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 				}
 				
 				//config search header
@@ -1092,7 +1085,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_type_txt.setText("Charts type: ");
 				chart_type_options.add("Top Songs");					
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-				chart_type.setSelection(chart_type_options.indexOf(MainActivity.getChartstype()));
+				chart_type.setSelection(chart_type_options.indexOf(((MainActivity) getActivity()).Chartstype));
 				
 				chart_country_txt.setText("Country: ");	
 				final Map<String, String> country_ar = new HashMap<>();
@@ -1114,7 +1107,7 @@ public class ChartsContentFragment extends Fragment{
 				}
 				Collections.sort(chart_country_options);
 				chart_country.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_country_options));
-				chart_country.setSelection(chart_country_options.indexOf(MainActivity.getChartscountry()));
+				chart_country.setSelection(chart_country_options.indexOf(((MainActivity) getActivity()).Chartscountry));
 				
 				chart_limit_txt.setText("Limit: ");
 				chart_limit_options.add("10");
@@ -1123,7 +1116,7 @@ public class ChartsContentFragment extends Fragment{
 				chart_limit_options.add("50");
 				chart_limit_options.add("100");
 				chart_limit.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_limit_options));
-				chart_limit.setSelection(chart_limit_options.indexOf(MainActivity.getChartslimit()));
+				chart_limit.setSelection(chart_limit_options.indexOf(((MainActivity) getActivity()).Chartslimit));
 				
 				chart_timeunit_txt.setText("Time Unit: ");
 				chart_timeunit_options.add("Daily");
@@ -1136,18 +1129,18 @@ public class ChartsContentFragment extends Fragment{
 				chart_timeinterval.setSelection(chart_timeinterval_options.indexOf("lastest"));
 				
 				listview.addHeaderView(header,null,false);
-				MainActivity.getChartsListAdapter().notifyDataSetChanged();
+				((MainActivity) getActivity()).ChartsListAdapter.notifyDataSetChanged();
 				
 				chart_submit.setOnClickListener(new View.OnClickListener() {					
 					@Override
 					public void onClick(View v) {
 						// re-send billboard request
-						MainActivity.setChartsname("LASTFM");
-						MainActivity.setChartstype(chart_type.getSelectedItem().toString());
-						MainActivity.setChartslimit(chart_limit.getSelectedItem().toString());
-						MainActivity.setChartscountry(chart_country.getSelectedItem().toString());
-						MainActivity.setChartstimeunit("Daily");
-						MainActivity.setChartstimeinterval("lastest");
+						((MainActivity) getActivity()).Chartsname ="LASTFM";
+						((MainActivity) getActivity()).Chartstype = "Top Songs";
+						((MainActivity) getActivity()).Chartslimit = chart_limit.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartscountry = chart_country.getSelectedItem().toString();
+						((MainActivity) getActivity()).Chartstimeunit = "Daily";
+						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String map_key_cc = "";
 						for (Entry<String, String> entry : country_ar.entrySet()){
 							if(entry.getValue().equals(chart_country.getSelectedItem().toString())){
@@ -1156,13 +1149,13 @@ public class ChartsContentFragment extends Fragment{
 							}							
 						}
 						String rq = "";
-						rq = "http://ws.audioscrobbler.com/2.0/?method=geo.getTopTracks&country="+map_key_cc+"&api_key=d6ef461c9610dc5d695efce1bbab90c1&format=json&limit="+MainActivity.getChartslimit();
+						rq = "http://ws.audioscrobbler.com/2.0/?method=geo.getTopTracks&country="+map_key_cc+"&api_key=d6ef461c9610dc5d695efce1bbab90c1&format=json&limit="+((MainActivity) getActivity()).Chartslimit;
 						JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
 							    new Response.Listener<JSONObject>() 
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							        	MainActivity.setChartsjson(response);         
+							        	((MainActivity) getActivity()).Chartsjson=response;         
 							        	//reload current Fragment
 										Fragment frg=null;
 										frg = getFragmentManager().findFragmentByTag("CHART_SINGLE_DETAIL_FRAGMENT");									
@@ -1170,7 +1163,7 @@ public class ChartsContentFragment extends Fragment{
 										ft.detach(frg);
 										ft.attach(frg);
 										ft.commit();
-										MainActivity.setCurrentaction("CHART_LIST");
+//										MainActivity.setCurrentaction("CHART_LIST");
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -1182,7 +1175,7 @@ public class ChartsContentFragment extends Fragment{
 							    }
 							);	
 						
-						MainActivity.getQueue().add(getRequest);						
+						MainActivity.queue.add(getRequest);						
 					}
 				});
 			} catch (JSONException e) {
@@ -1197,7 +1190,7 @@ public class ChartsContentFragment extends Fragment{
 			break;
 		}	
 			
-		listview.setAdapter(MainActivity.getChartsListAdapter());	
+		listview.setAdapter(((MainActivity) getActivity()).ChartsListAdapter);	
 		
 		
 		/**
@@ -1210,27 +1203,27 @@ public class ChartsContentFragment extends Fragment{
 					final int position, long id) {					
 						// CHART ONITEMSCLICK
 						String rq = "https://gdata.youtube.com/feeds/api/videos?q="+
-									MainActivity.getChartsListItems().get(position-1).getTitle().trim().replace(" ", "+")+"+"+
-									MainActivity.getChartsListItems().get(position-1).getArtist().trim().replace(" ", "+")+
+								((MainActivity) getActivity()).ChartsListItems.get(position-1).getTitle().trim().replace(" ", "+")+"+"+
+								((MainActivity) getActivity()).ChartsListItems.get(position-1).getArtist().trim().replace(" ", "+")+
 									"&orderby=relevance&start-index=1&max-results=20&v=2&alt=json";					
 						JsonObjectRequest getRequest = new JsonObjectRequest(Request.Method.GET, rq, null,
 							    new Response.Listener<JSONObject>() 
 							    {
 							        @Override
 							        public void onResponse(JSONObject response) {   
-							            MainActivity.setsearchyoutubejson(response);
-							            MainActivity.setsearch_youtube_format("YOUTUBE_LIST");
-							            MainActivity.setsearch_youtube_title_txt(MainActivity.getChartsListItems().get(position-1).getTitle());
-										MainActivity.setsearch_youtube_artist_txt(MainActivity.getChartsListItems().get(position-1).getArtist());          
+							        	((MainActivity) getActivity()).searchyoutubejson=response;
+							        	((MainActivity) getActivity()).search_youtube_format="YOUTUBE_LIST";
+							        	((MainActivity) getActivity()).search_youtube_title_txt=((MainActivity) getActivity()).ChartsListItems.get(position-1).getTitle();
+							        	((MainActivity) getActivity()).search_youtube_artist_txt=((MainActivity) getActivity()).ChartsListItems.get(position-1).getArtist();          
 							            
 							            FragmentManager fm = getFragmentManager();
 										FragmentTransaction ft = fm.beginTransaction();
 										YoutubeListContentFragment rep = new YoutubeListContentFragment();
-										ft.addToBackStack("abbccd");
-										ft.hide(ChartsContentFragment.this);
+										ft.remove(ChartsContentFragment.this);
 										ft.add(android.R.id.content, rep, "YOUTUBE_DETAIL_FRAGMENT");
+										ft.addToBackStack(null);
 										ft.commit();
-										MainActivity.setCurrentaction("YOUTUBE_LIST");
+										MainActivity.currentaction="YOUTUBE_LIST";
 							        }
 							    }, 
 							    new Response.ErrorListener() 
@@ -1241,12 +1234,12 @@ public class ChartsContentFragment extends Fragment{
 							       }						
 							    }
 							);
-						MainActivity.gethttpsQueue().add(getRequest);						
+						((MainActivity) getActivity()).httpsqueue.add(getRequest);					
 					
 			}
 			
-		});
-		
+		}); 
+		((MainActivity) getActivity()).actionBar.hide();
 		return rootView;
-	}
+	}	
 }

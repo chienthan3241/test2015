@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:baselineAligned="false"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="horizontal" >
@@ -8,8 +9,7 @@
         android:layout_width="0dip"
         android:layout_height="fill_parent"
         android:layout_weight="0.5" >
-
-       <EditText
+<!--        <EditText
             android:id="@+id/titleSearch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -19,7 +19,17 @@
             android:layout_marginTop="50dp"
             android:ems="10" >
             <requestFocus />
-        </EditText>
+        </EditText>-->
+        <com.example.test2015.DelayAutoCompleteTextView     
+	            android:id="@+id/titleSearch"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi|actionSearch" 
+	            android:layout_alignParentTop="true"
+	            android:layout_alignParentRight="true"
+	            android:layout_marginRight="25dp"
+	            android:layout_marginTop="50dp"
+	            android:ems="10"  />
 
         <TextView
             android:id="@+id/titlelbl"
@@ -30,7 +40,7 @@
             android:layout_alignTop="@id/titleSearch"
             android:text="@string/title"
             android:textSize="20sp" />
-        
+        <!-- 
         <EditText
             android:id="@+id/artistSearch"
             android:layout_width="wrap_content"
@@ -40,7 +50,18 @@
             android:layout_marginTop="10dp"
             android:layout_below="@id/titleSearch"
             android:ems="10" >
-        </EditText>
+        </EditText>-->
+        
+         <com.example.test2015.DelayAutoCompleteTextView     
+	            android:id="@+id/artistSearch"
+	            android:layout_width="wrap_content"
+	            android:layout_height="wrap_content"
+	            android:imeOptions="flagNoExtractUi|actionSearch" 
+	            android:layout_marginTop="10dp"
+	            android:layout_alignParentRight="true"
+	            android:layout_below="@id/titleSearch"
+	            android:layout_marginRight="25dp"
+	            android:ems="10"  />
         
         <TextView
             android:id="@+id/artistlbl"

@@ -9,17 +9,18 @@ import com.example.test2015.PlaylistFragment;
 import com.example.test2015.SearchFragment;
 
 public class TabsPagerAdapter extends FragmentStatePagerAdapter  {
+	
 	public TabsPagerAdapter(FragmentManager fm) {
-		super(fm);
+		super(fm);		
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
 	public Fragment getItem(int arg0) {		
 		switch (arg0) {
-        case 0: 
+        case 0:
             return new ChartFragment();
-        case 1:            
+        case 1:         	
             return new SearchFragment();
         case 2:
             return new PlaylistFragment();
@@ -32,5 +33,4 @@ public class TabsPagerAdapter extends FragmentStatePagerAdapter  {
 		// TODO Auto-generated method stub
 		return 3;
 	}	
-
 }
