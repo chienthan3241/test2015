@@ -1,13 +1,23 @@
 package com.example.test2015;
 
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.example.test2015.adapter.ChartGridAdapter;
+import com.example.test2015.adapter.SpotifyTitleSearchAdapter;
+import com.example.test2015.adapter.TabsPagerAdapter;
+import com.example.test2015.adapter.YoutubeAutoCompleteAdapter;
+import com.example.test2015.adapter.searchTrackList;
+import com.example.test2015.libs.MyHttpsUrlStack;
+import com.example.test2015.libs.MyHurlStack;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
@@ -342,11 +352,12 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	}
 	public  List<single_track> ChartsListItems = new ArrayList<single_track>();
 	public  searchTrackList ChartsListAdapter;
+	public ChartGridAdapter ChartsGridAdapter;
 	public  JSONObject Chartsjson = null;
 	public  JSONArray Chartsjsonarr = null;
 	public  String Chartsxml = null;
-	public  String Chartsname ="";
-	public  String Chartstype ="";
+	public static String Chartsname ="";
+	public  static String Chartstype ="";
 	public  String Chartslimit="";
 	public  String Chartscountry ="";
 	public  String Chartstimeunit = "";
@@ -399,6 +410,7 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 	    youtubeAutocompleteadapter = new YoutubeAutoCompleteAdapter(this);
 	    SpotAutoCompleteTitleAdapter = new SpotifyTitleSearchAdapter(this, "title");
 	    SpotAutoCompleteArtistAdapter = new SpotifyTitleSearchAdapter(this, "artist");
+	    ChartsGridAdapter = new ChartGridAdapter(this, ChartsListItems);
 	    
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections of the activity.
@@ -503,5 +515,21 @@ public class MainActivity extends FragmentActivity implements ActionBar.TabListe
 		// TODO Auto-generated method stub
 		
 	}	
+	
+	public static void setproxy(){
+		Authenticator authenticator = new Authenticator() {
+	        public PasswordAuthentication getPasswordAuthentication() {
+	            return (new PasswordAuthentication("manh-cuong.tran",
+	                    "Password2013".toCharArray()));
+	        }
+	    };
+		Authenticator.setDefault(authenticator);
+		Properties systemProperties = System.getProperties();
+		//systemProperties.setProperty("https.proxySet", "true");
+		systemProperties.setProperty("http.proxyHost","10.149.18.180");
+		systemProperties.setProperty("http.proxyPort","8080");
+		systemProperties.setProperty("https.proxyHost","10.149.18.180");
+		systemProperties.setProperty("https.proxyPort","8080");
+	}
 
 }

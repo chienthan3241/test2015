@@ -4,6 +4,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.example.test2015.libs.LruBitmapCache;
 
 import android.app.Application;
 import android.text.TextUtils;

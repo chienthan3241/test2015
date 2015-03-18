@@ -1,13 +1,13 @@
 package com.example.test2015;
 
 public class single_track {
-	private String title, artist, thumbnailUrl, info, id;
+	private String title, artist, thumbnailUrl, info, id, rate, preis;
 	private boolean imgfromlocal;
 	Integer localimg;
 	public single_track(){
 		//this.imgfromlocal = false;
 	}
-	public single_track(String title, String artist, String thumbnailUrl, String info, String id, Integer localimg, boolean imgfromlocal){
+	public single_track(String title, String artist, String thumbnailUrl, String info, String id, Integer localimg, boolean imgfromlocal, String rate, String preis){
 		this.title = title;
 		this.artist = artist;
 		this.thumbnailUrl = thumbnailUrl;
@@ -15,6 +15,8 @@ public class single_track {
 		this.id = id;
 		this.localimg = localimg;
 		this.imgfromlocal = imgfromlocal;
+		this.rate = rate;
+		this.preis = preis;
 	}
 	
 	public boolean getImgFromLocal(){
@@ -72,4 +74,20 @@ public class single_track {
 	public void setInfo(String name) {
         this.info = name;
     }
+	
+	public void setRate(String name) {
+		this.rate = name;
+	}
+	
+	public String getRate () {
+		return this.rate;
+	}
+	
+	public void setPreis(String name ){
+		this.preis = name;
+	}
+	
+	public String getPreis () {
+		return this.preis;
+	}
 }

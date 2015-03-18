@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"     
+    
+    android:orientation="vertical"	
+	android:background="@color/white" >
+    <ImageView
+        android:id="@+id/griditemcover"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+     	android:layout_weight="0.70"  
+     	/> 
+
+    <TextView
+        android:id="@+id/griditemtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="@color/black"
+        android:textSize="14sp"        
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+    <TextView
+        android:id="@+id/griditemartist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:textColor="#aaaaaa"
+        android:textSize="12sp"        
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp" />
+    
+    <RelativeLayout 
+        android:layout_height="10dp"
+        android:layout_width="50dp"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        >
+        <ImageView
+            android:id="@+id/ratestarbgr"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:background="#90000000"/>
+        <ImageView
+            android:id="@+id/ratestar"            
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/rate" />
+        
+    </RelativeLayout>
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <TextView
+	        android:id="@+id/griditempreis"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:singleLine="true"
+	        android:textColor="#fb8521"
+	        android:textSize="12sp"        
+	        android:layout_alignParentRight="true" 
+	        android:paddingRight="10dp"/>
+    </RelativeLayout>
+    
+   
+</LinearLayout>
