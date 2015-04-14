@@ -61,7 +61,7 @@ public class ChartGridAdapter extends BaseAdapter {
 		
 		single_track item = items.get(position);
 		MainActivity.setproxy();
-		Picasso.with(activity.getBaseContext()).load(item.getThumbnailUrl()).into(thumb);
+		Picasso.with(activity.getBaseContext()).load(item.getThumbnailUrl()).error(R.drawable.googleplay_store).into(thumb);
 		title.setText(new Integer(position+1).toString()+". "+item.getTitle());
 		artist.setText(item.getArtist());
 		if(MainActivity.Chartstype.equals("Top Albums") && (MainActivity.Chartsname.equals("GOOGLEPLAY"))){

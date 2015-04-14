@@ -80,14 +80,14 @@ public class ChartsRootAdapter extends BaseAdapter {
 	
 	// references to our images
     private int[] mThumbIds = {
-//            R.drawable.billboard, 
+           //R.drawable.billboard, 
     		R.drawable.itunes_store,
             R.drawable.googleplay_store, R.drawable.spotify_store,
             R.drawable.amazon_store, R.drawable.napster_logo,
             R.drawable.lastfm_store
     };
     private String[] contents = {
-//    		"Billboard Hot 100",
+    		//"Billboard Hot 100",
     		"Itunes Top Selling","Google Play Charts","Spotify Charts","Amazon Top Selling","Napster-Rhapsody Charts","Lastfm Radio Charts"
     };
 

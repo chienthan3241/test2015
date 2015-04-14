@@ -143,8 +143,9 @@ public class ChartsContentFragment extends Fragment{
 				
 				chart_type_txt.setText("Charts type: ");	
 				chart_type_options.add("hot-100");
+				chart_type_options.add("billboard-200");
 				chart_type.setAdapter(new ArrayAdapter<String>(this.getActivity().getApplicationContext(), android.R.layout.simple_spinner_item,chart_type_options));
-				chart_type.setSelection(chart_type_options.indexOf("hot-100"));
+				chart_type.setSelection(chart_type_options.indexOf(MainActivity.Chartstype));
 				
 				chart_country_txt.setText("Country: ");				
 				chart_country_options.add("World wide");
@@ -179,7 +180,8 @@ public class ChartsContentFragment extends Fragment{
 						((MainActivity) getActivity()).Chartstimeunit = "Weekly";
 						((MainActivity) getActivity()).Chartstimeinterval = "lastest";
 						String rq = "";
-						rq = "http://billboard.com/rss/charts/hot-100";
+						rq = "http://billboard.com/rss/charts/"+chart_type.getSelectedItem().toString();
+						
 						StringRequest getRequest = new StringRequest(Request.Method.GET, rq, 
 							new Response.Listener<String>() {
 								@Override
@@ -489,34 +491,37 @@ public class ChartsContentFragment extends Fragment{
 			
 			Document doc = Jsoup.parse(((MainActivity) getActivity()).Chartsxml);
 			Elements gitems = doc.select("div.details");
-			Elements gcovers = doc.select("div.cover");
-			
+			Elements gcovers = doc.select("div.cover");			
 			Elements gpreis = doc.select("div.reason-set");
-			String grank = "";
 			for(int i =0; i<gitems.size();i++){
 				track_tmp = new single_track();				
-				track_tmp.setThumbnailUrl(gcovers.get(i).select("img").first().attr("src"));
+				track_tmp.setThumbnailUrl((gcovers.get(i).select("img").first() == null) ? "http://nothing" : gcovers.get(i).select("img").first().attr("src"));
 				if(gitems.get(i).select("a.title").first().text().indexOf(".") != -1){
 					track_tmp.setTitle(gitems.get(i).select("a.title").first().text().substring(gitems.get(i).select("a.title").first().text().indexOf(".") + 1).trim());
-					grank = gitems.get(i).select("a.title").first().text().substring(0, gitems.get(i).select("a.title").first().text().indexOf("."));
 				}else{
 					track_tmp.setTitle(gitems.get(i).select("a.title").first().text());
-					grank = new Integer(i).toString();
 				}
 				track_tmp.setArtist(gitems.get(i).select("a.subtitle").first().text());
-				track_tmp.setInfo(
-						"Rank: " + grank + "\t"+
-						"GooglePlay preis: "+gitems.get(i).select("span.display-price").first().text()						
-						);
-				track_tmp.setPreis(gitems.get(i).select("span.display-price").first().text());
+				track_tmp.setPreis((gitems.get(i).select("span.display-price").first() == null) ? "--": gitems.get(i).select("span.display-price").first().text());
 				if(MainActivity.Chartstype.equals("Top Songs")){
 					track_tmp.setRate("50");
 				}else{
-					String percent= gpreis.get(i).select("div.current-rating").first().attr("style");
-					percent = percent.substring(6).replace("%;", "").trim();
-					Double D = Double.parseDouble(percent)*2/5;					
-					int val = Integer.valueOf(D.intValue());
-					track_tmp.setRate(new Integer(val).toString());
+					String percent = "0";
+					if(gpreis.get(i).select("div.current-rating").first() != null){
+						percent = gpreis.get(i).select("div.current-rating").first().attr("style");
+						
+						if(percent.length()>6){
+							percent = percent.substring(6).replace("%;", "").trim();
+						}else{
+							percent = "0";
+						}
+						
+						Double D = Double.parseDouble(percent)*2/5;					
+						int val = Integer.valueOf(D.intValue());
+						track_tmp.setRate(new Integer(val).toString());
+					}else{
+						track_tmp.setRate(percent);
+					}
 				}
 				((MainActivity) getActivity()).ChartsListItems.add(track_tmp);
 			}
