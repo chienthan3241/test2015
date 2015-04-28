@@ -5,6 +5,6 @@
  - Tabs application in ActionBar
  - Fragments + Transation
  - Custom ListView + Custom HeaderGridView
- - and so on .....
+ - and so on .........
  ----------
 ![sample pic](https://www.dropbox.com/s/14gqfveck8qb10o/example.png?dl=0)
